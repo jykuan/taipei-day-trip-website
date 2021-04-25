@@ -1,5 +1,5 @@
-from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response
-import json
+from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response, Response
+# import json
 import mysql.connector
 from mysql.connector import Error
 
@@ -13,7 +13,8 @@ cursorTripData=mydb.cursor(buffered=True)
 cursorTripData.execute("SELECT DATABASE();")	
 
 app=Flask(__name__)
-app.config["JSON_AS_ASCII"]=False
+app.config['JSON_AS_ASCII']=False
+# app.config['JSONIFY_MIMETYPE'] ="charset=utf-8"
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 
 # Pages
@@ -55,13 +56,13 @@ def apiAttraction(attractionId):
 				if img[-3]+img[-2]+img[-1] == "PNG":
 					pdimage.append(img)
 		sqlSearchResult["data"]["images"]=pdimage
-		return json.dumps(sqlSearchResult, ensure_ascii=False)
+		return jsonify(sqlSearchResult)
 	else:
 		sqlSearchResult={
 			"error":True,
 			"message":"Attracions number error or does not exist."
 		}
-		return json.dumps(sqlSearchResult), 400
+		return jsonify(sqlSearchResult), 400
 
 @app.route("/api/attractions")
 def apiAttractions():
@@ -70,75 +71,77 @@ def apiAttractions():
 	keyword=request.args.get("keyword", "allAttractions")
 	sqlSearchResult=[]
 	if keyword == "allAttractions":
-		for idNumber in range(page*12+1 ,page*12+12):
-			cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData where _id=%s;", (idNumber,))
-			for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
-				attraction={
-					"id":_id,
-					"name":stitle,
-					"category":CAT2,
-					"description":xbody,
-					"address":address,
-					"transport":info,
-					"mrt":MRT,
-					"latitude":latitude,
-					"longitude":longitude,
-					"images":images
-				}
-				pdimage=[]
-				spImages=attraction["images"].split('"')
-				for spImage in spImages:
-					img=str(spImage)
-					if len(img) > 3:
-						if img[-3]+img[-2]+img[-1] == "jpg":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "JPG":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "png":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "PNG":
-							pdimage.append(img)
-				attraction["images"]=pdimage
-				sqlSearchResult.append(attraction)
+		cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData LIMIT %s, %s;", (page*12,12))
+		for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
+			attraction={
+				"id":_id,
+				"name":stitle,
+				"category":CAT2,
+				"description":xbody,
+				"address":address,
+				"transport":info,
+				"mrt":MRT,
+				"latitude":latitude,
+				"longitude":longitude,
+				"images":images
+			}
+			pdimage=[]
+			spImages=attraction["images"].split('"')
+			for spImage in spImages:
+				img=str(spImage)
+				if len(img) > 3:
+					if img[-3]+img[-2]+img[-1] == "jpg":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "JPG":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "png":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "PNG":
+						pdimage.append(img)
+			attraction["images"]=pdimage
+			sqlSearchResult.append(attraction)
 	else:
+		cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData where stitle LIKE %s LIMIT %s, %s;", ("%"+keyword+"%", page*12, 12))
+		for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
+			attraction={
+				"id":_id,
+				"name":stitle,
+				"category":CAT2,
+				"description":xbody,
+				"address":address,
+				"transport":info,
+				"mrt":MRT,
+				"latitude":latitude,
+				"longitude":longitude,
+				"images":images
+			}
+			print(attraction["name"])
+			pdimage=[]
+			spImages=attraction["images"].split('"')
+			for spImage in spImages:
+				img=str(spImage)
+				if len(img) > 3:
+					if img[-3]+img[-2]+img[-1] == "jpg":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "JPG":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "png":
+						pdimage.append(img)
+					if img[-3]+img[-2]+img[-1] == "PNG":
+						pdimage.append(img)
+			attraction["images"]=pdimage
+			sqlSearchResult.append(attraction)
 		name=[]
 		cursorTripData.execute("SELECT stitle FROM TaipeiTripData where stitle LIKE %s;", ("%"+keyword+"%",))
 		for stitleKeyword in cursorTripData: 
 			name.append(stitleKeyword[0])
-		for stitle in name[page*12:page*12+12]:
-			cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData where stitle=%s;", (stitle,))
-			for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
-				attraction={
-					"id":_id,
-					"name":stitle,
-					"category":CAT2,
-					"description":xbody,
-					"address":address,
-					"transport":info,
-					"mrt":MRT,
-					"latitude":latitude,
-					"longitude":longitude,
-					"images":images
-				}
-				pdimage=[]
-				spImages=attraction["images"].split('"')
-				for spImage in spImages:
-					img=str(spImage)
-					if len(img) > 3:
-						if img[-3]+img[-2]+img[-1] == "jpg":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "JPG":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "png":
-							pdimage.append(img)
-						if img[-3]+img[-2]+img[-1] == "PNG":
-							pdimage.append(img)
-				attraction["images"]=pdimage
-				sqlSearchResult.append(attraction)
+		print(len(name))
+		print(name)
 	apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
 	if len(sqlSearchResult)==0:
 		apiAttractionsJson={"nextPage":None, "data":None}
-	return json.dumps(apiAttractionsJson, ensure_ascii=False)
+	# return json.dumps(apiAttractionsJson, ensure_ascii=False)
+	return jsonify(apiAttractionsJson)
 
 @app.route("/attraction/<id>")
 def attraction(id):
