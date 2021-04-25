@@ -115,7 +115,6 @@ def apiAttractions():
 				"longitude":longitude,
 				"images":images
 			}
-			print(attraction["name"])
 			pdimage=[]
 			spImages=attraction["images"].split('"')
 			for spImage in spImages:
