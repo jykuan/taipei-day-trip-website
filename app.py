@@ -135,8 +135,6 @@ def apiAttractions():
 		cursorTripData.execute("SELECT stitle FROM TaipeiTripData where stitle LIKE %s;", ("%"+keyword+"%",))
 		for stitleKeyword in cursorTripData: 
 			name.append(stitleKeyword[0])
-		print(len(name))
-		print(name)
 	apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
 	if len(sqlSearchResult)==0:
 		apiAttractionsJson={"nextPage":None, "data":None}
