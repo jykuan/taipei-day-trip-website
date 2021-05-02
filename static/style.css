@@ -1,0 +1,321 @@
+/* CSS Reset Start */
+/* http://meyerweb.com/eric/tools/css/reset/
+v2.0 | 20110126
+License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    font-size:100%;
+    font:inherit;
+    vertical-align:baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display:block;
+}
+body {
+    line-height:1;
+}
+ol, ul {
+    list-style:none;
+}
+blockquote, q {
+    quotes:none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content:'';
+	content:none;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+img{
+    max-width:100%;
+    height:auto;
+}
+*,*::before,*::after{
+    box-sizing:border-box;
+}
+
+/* Pure-form Start */
+.pure-form input[type="text"],
+.pure-form input[type="password"],
+.pure-form input[type="email"],
+.pure-form input[type="url"],
+.pure-form input[type="date"],
+.pure-form input[type="month"],
+.pure-form input[type="time"],
+.pure-form input[type="datetime"],
+.pure-form input[type="datetime-local"],
+.pure-form input[type="week"],
+.pure-form input[type="number"],
+.pure-form input[type="search"],
+.pure-form input[type="tel"],
+.pure-form input[type="color"],
+.pure-form select,
+.pure-form textarea {
+    padding:0.5em 0.6em;
+    display:block;
+    border:1px solid #ccc;
+    box-shadow:inset 0 1px 3px #ddd;
+    border-radius:4px;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+    width:100%;
+    font-size:16px;
+}
+
+/* Pure-bottom Start */
+.pure-button{
+    /* Structure */
+    display: inline-block;
+    zoom: 1;
+    line-height: normal;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.pure-button{
+    font-family: inherit;
+    font-size: 100%;
+    padding: 0.5em 1em;
+    color: #444; /* rgba not supported (IE 8) */
+    color: rgba(0, 0, 0, 0.80); /* rgba supported */
+    border: 1px solid #999;  /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+    background-color: #E6E6E6;
+    text-decoration: none;
+    border-radius: 2px;
+    margin:0px;
+}
+
+/* CSS Start */
+body{
+    font-family:Helvetica;
+    color:rgb(65, 54, 54);
+}
+.wrap{
+    position:relative;
+    max-width:1200px;
+    margin:0 auto;
+}
+.wrapHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0px;
+}
+.wrapHeader h1 a{
+    display:block;
+    font-weight:bold;
+    font-size:30px;
+    color:#448899;
+    text-decoration:none;
+    margin-left:10px;
+}
+.wrapHeader ul{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.wrapHeader ul li a{
+    margin:10px;
+    font-size:16px;
+    color:#666666;
+    text-decoration:none;
+}
+.wrapHeader ul li a:hover{
+    color:#448899;
+}
+@media screen and (max-width:600px){
+    .wrapHeader ul li a{
+        margin:7.5px;
+    }
+}
+.banner{
+    background:linear-gradient(#AADDEE, #66AABB);
+}
+.wrapBanner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1300px;
+    margin:0 auto;
+    overflow:hidden;
+}
+.banner .areaRight{
+    padding-left:60px;
+}
+.banner .bannerText h2{
+    font-weight:bold;
+    font-size:28px;
+    line-height:24px;
+    display:flex;
+    align-items:center;
+    color:#F8F8F8;
+    text-shadow:0px 0px 30px #AABBCC;
+}
+.banner .bannerText p{
+    font-size:16px;
+    line-height:13px;
+    display:flex;
+    align-items:center;
+    color:#F8F8F8;
+    margin-top:20px;
+    margin-bottom:25px;
+}
+.banner img{
+    display:block;
+}
+.buttonSearch{
+    width:60px;
+    height:48px;
+    background-color:#448899;
+    border-top-left-radius:0px;
+    border-bottom-left-radius:0px;
+    margin-left:0px;
+    display:block;
+}
+.areaRight .pure-form{
+    display:flex;
+}
+.wrapBanner .areaRight .pure-form input[type="text"]{
+    padding:15px;
+    border-top-right-radius:0px;
+    border-bottom-right-radius:0px;
+    font-weight:bold;
+    font-size:16px;
+    width:400px;
+    color:#757575;
+    margin:0px;
+    display:inline-block;
+    border:0px;
+}
+.buttonSearch .search{
+    color:#F8F8F8;
+    font-size:28px;
+}
+.buttonSearch:hover{
+    background-color:#387180
+}
+.buttonSearch:focus{
+    background-color:orange;
+}
+@media screen and (max-width:600px){
+    .wrapBanner{
+        flex-direction:column;
+        padding:65px 20px 0px 20px;
+        position:relative;
+    }
+    .banner .areaRight{
+        padding-left:0px;
+        z-index:10;
+    }
+    .wrapBanner img{
+        width:80%;
+        position:absolute;
+        left:40%;
+        bottom:0px;
+    }
+    #spotNameSearch{
+        width:75%;
+        margin-bottom:65px;
+    }
+}
+.wrapSpotContent{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    padding:55px 0px 25px 0px;
+    margin:0 auto;
+}
+.wrapSpotContent spotImageText{
+    display:block;
+    width:270px;
+    margin:0px 15px 30px 15px;
+    color:#757575;
+    font-size:16px;
+    border:1px solid #E8E8E8;
+    box-sizing:border-box;
+    border-radius:5px;
+    overflow:hidden;
+}
+.wrapSpotContent spotImageFigure{
+    display:block;
+    height:160px;
+    overflow:hidden;
+}
+.wrapSpotContent spotImageFigure img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.wrapSpotContent spotImageText spotTextName{
+    display:block;
+    font-weight:bold;
+    line-height:1.5;
+    padding:15px 10px 15px 10px;
+}
+.wrapSpotContent spotImageText spotTextMrtCat{
+    display:flex;
+    justify-content:space-between;
+    padding:0px 10px 10px 10px;
+}
+.wrapSpotContent spotImageText spotTextMrtCat spotTextMrt, .wrapSpotContent spotImageText spotTextMrtCat spotTextCat{
+    display:block;
+}
+.wrapSpotContent reply{
+    margin-bottom:30px;
+}
+@media screen and (max-width:600px){
+    .wrapSpotContent spotImageText{
+        margin:0px 15px 15px 15px;
+        width:100%;
+    }
+    .wrapSpotContent{
+        padding-left:15px;
+        padding-right:15px;
+    }
+    .wrapSpotContent spotImageFigure{
+        height:200px;
+    }
+}
+footer{
+    font-weight:bold;
+    font-size:16px;
+    color:#FFFFFF;
+    text-align:center;
+    padding:40px 0px;
+    background-color:#757575;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
