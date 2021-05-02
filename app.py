@@ -2,7 +2,6 @@ from flask import Flask, request, redirect, render_template, session, url_for, j
 # import json
 import mysql.connector
 from mysql.connector import Error
-from flask_cors import CORS
 
 mydb=mysql.connector.connect(
     host="localhost",
@@ -14,8 +13,6 @@ cursorTripData=mydb.cursor(buffered=True)
 cursorTripData.execute("SELECT DATABASE();")	
 
 app=Flask(__name__)
-CORS(app, resources=r'/api/*', headers='Content-Type')
-# CORS(app)
 app.config['JSON_AS_ASCII']=False
 # app.config['JSONIFY_MIMETYPE'] ="charset=utf-8"
 app.config["TEMPLATES_AUTO_RELOAD"]=True
