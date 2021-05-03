@@ -16,6 +16,8 @@ app=Flask(__name__)
 app.config['JSON_AS_ASCII']=False
 # app.config['JSONIFY_MIMETYPE'] ="charset=utf-8"
 app.config["TEMPLATES_AUTO_RELOAD"]=True
+app.config["Access-Control-Allow-Origin"]="*"
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Pages
 @app.route("/")
@@ -64,13 +66,15 @@ def apiAttraction(attractionId):
 		}
 		return jsonify(sqlSearchResult), 400
 
-@app.route("/api/attractions")
+@app.route("/api/attractions", methods=["POST", "GET"])
 def apiAttractions():
 	page=request.args.get("page", 0)
 	page=int(page)
+	searchKeyword=request.get_json()
 	keyword=request.args.get("keyword", "allAttractions")
 	sqlSearchResult=[]
-	if keyword == "allAttractions":
+	if searchKeyword == None:
+		sqlSearchResult=[]
 		cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData LIMIT %s, %s;", (page*12,12))
 		for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
 			attraction={
@@ -100,8 +104,13 @@ def apiAttractions():
 						pdimage.append(img)
 			attraction["images"]=pdimage
 			sqlSearchResult.append(attraction)
+			apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
+		apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
+		if len(sqlSearchResult)==0:
+			apiAttractionsJson={"nextPage":None, "data":None}
+		return make_response(jsonify(apiAttractionsJson), 200)
 	else:
-		cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData where stitle LIKE %s LIMIT %s, %s;", ("%"+keyword+"%", page*12, 12))
+		cursorTripData.execute("SELECT _id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images FROM TaipeiTripData where stitle LIKE %s LIMIT %s, %s;", ("%"+searchKeyword["searchKeyword"]+"%", page*12, 12))
 		for (_id, stitle, CAT2, xbody, address, info, MRT, latitude, longitude, images) in cursorTripData: 
 			attraction={
 				"id":_id,
@@ -130,15 +139,12 @@ def apiAttractions():
 						pdimage.append(img)
 			attraction["images"]=pdimage
 			sqlSearchResult.append(attraction)
-		name=[]
-		cursorTripData.execute("SELECT stitle FROM TaipeiTripData where stitle LIKE %s;", ("%"+keyword+"%",))
-		for stitleKeyword in cursorTripData: 
-			name.append(stitleKeyword[0])
-	apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
-	if len(sqlSearchResult)==0:
-		apiAttractionsJson={"nextPage":None, "data":None}
-	# return json.dumps(apiAttractionsJson, ensure_ascii=False)
-	return jsonify(apiAttractionsJson)
+		apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
+		if len(sqlSearchResult)==0:
+			apiAttractionsJson={"nextPage":None, "data":None}
+			return make_response(jsonify(apiAttractionsJson), 200)
+		print(sqlSearchResult)
+		return make_response(jsonify(apiAttractionsJson), 200)
 
 @app.route("/attraction/<id>")
 def attraction(id):
