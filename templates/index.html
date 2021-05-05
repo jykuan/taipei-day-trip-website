@@ -28,7 +28,7 @@
                     <p>探索每個角落，體驗城市的深度旅遊行程</p>
                 </div>
                 <div class="pure-form" action="">
-                    <input type="text" id="spotNameSearch" name="spotNameKeyword" placeholder="輸入景點名稱查詢">
+                    <input type="text" id="spotNameSearch" name="keyword" placeholder="輸入景點名稱查詢" value="">
                     <button class="pure-button buttonSearch" onclick="spotNameKeyword()"><i class="fas fa-search search"></i></button>
                 </div>
             </div>
@@ -42,6 +42,7 @@
         <h3>COPYRIGHT <i class="far fa-copyright"></i> 2021 台北一日遊</h3>
     </footer>
     <script type="text/javascript">
+        // HomePage Onload
         var spot=new XMLHttpRequest();
         spot.open("GET","/api/attractions",true);
         spot.onload=function(){
@@ -87,21 +88,11 @@
             threshold:1,
             rootMargin:"-150px 0px 150px 0px"
         };
+        
+        // SearchButton Onclick
         function spotNameKeyword(){
-            var spotNameSearch=document.getElementById("spotNameSearch");
-            var searchKeyword={
-                searchKeyword:spotNameSearch.value
-            };
-            fetch(`/api/attractions`, {
-                method:"POST",
-                credentials:"include",
-                body:JSON.stringify(searchKeyword),
-                cache:"no-cache",
-                headers:new Headers({
-                    "content-type":"application/json"
-                })
-            })
-            .then(function(response){
+            var spotNameSearch=document.getElementById("spotNameSearch").value;
+            fetch(`/api/attractions?keyword=`+spotNameSearch,).then(function(response){
                 observer.disconnect(spotFooter);
                 if (response.status !== 200){
                     console.log("Response status was not 200");
@@ -111,8 +102,8 @@
                     document.getElementsByClassName("wrapSpotContent")[0].innerHTML="";
                     if (data.data === null){
                         var reply=document.createElement("reply");
-                        reply.textContent="No related attractions."
-                        document.getElementsByClassName("wrapSpotContent")[0].appendChild(reply)
+                        reply.textContent="No related attractions.";
+                        document.getElementsByClassName("wrapSpotContent")[0].appendChild(reply);
                     }
                     for (var resetDisplayQuantity=0;resetDisplayQuantity<12;resetDisplayQuantity++){
                         var spotImageText=document.createElement("spotImageText");
@@ -146,20 +137,21 @@
 
                         spotImageText.appendChild(spotTextMrtCat);
                     };
+                    // SearchButton Onclick InfiniteScroll
+                    page=0;
                     var spotFooter=document.getElementsByClassName("spotFooter")[0];
                     var observer=new IntersectionObserver(function(entries, observer){
                         entries.forEach(entry => {
-                            console.log(entry);
                             var resetSpot=new XMLHttpRequest();
-                            page++
-                            resetSpot.open("GET","/api/attractions?page="+String(page)+"&keyword="+searchKeyword.searchKeyword,true);
+                            page++;
+                            resetSpot.open("GET","/api/attractions?page="+String(page)+"&keyword="+spotNameSearch,true);
                             resetSpot.onload=function(){
                                 spotData=JSON.parse(resetSpot.responseText);
                                 for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
                                     var spotImageText=document.createElement("spotImageText");
 
                                     // spotImage
-                                    var spotImageFigure=document.createElement("spotImageFigure")
+                                    var spotImageFigure=document.createElement("spotImageFigure");
                                     var spotImages=spotData.data[displayQuantity].images[0];
                                     var spotImage=document.createElement("img");
                                     spotImage.setAttribute("src", spotImages);
@@ -187,11 +179,11 @@
                                     spotTextMrtCat.appendChild(spotTextCat);
 
                                     spotImageText.appendChild(spotTextMrtCat);
-                                    console.log(data.nextPage)
                                 };     
-                                if (page >= data.nextPage){
-                                    observer.disconnect(spotFooter);
-                                };
+                                console.log(data.nextPage);
+                                // if (page >= data.nextPage){
+                                //     observer.disconnect(spotFooter);
+                                // };
                             };
                             resetSpot.send();
                         })
@@ -200,55 +192,59 @@
                 });
             });
         };
+        
+        // InfiniteScroll
         var observer=new IntersectionObserver(function(entries, observer){
             entries.forEach(entry => {
-                console.log(entry);
-                var spots=new XMLHttpRequest();
-                page++
-                var url="/api/attractions?page="+String(page);
-                spots.open("GET",url,true);
-                spots.onload=function(){
-                    spotData=JSON.parse(spots.responseText);
-                    for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
-                        var spotImageText=document.createElement("spotImageText");
+                // console.log(entry.isIntersecting);
+                if (entry.isIntersecting == true){
+                    var spots=new XMLHttpRequest();
+                    page++;
+                    spots.open("GET","/api/attractions?page="+String(page),true);
+                    spots.onload=function(){
+                        spotData=JSON.parse(spots.responseText);
+                        for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
+                            var spotImageText=document.createElement("spotImageText");
 
-                        // spotImage
-                        var spotImageFigure=document.createElement("spotImageFigure")
-                        var spotImages=spotData.data[displayQuantity].images[0];
-                        var spotImage=document.createElement("img");
-                        spotImage.setAttribute("src", spotImages);
+                            // spotImage
+                            var spotImageFigure=document.createElement("spotImageFigure")
+                            var spotImages=spotData.data[displayQuantity].images[0];
+                            var spotImage=document.createElement("img");
+                            spotImage.setAttribute("src", spotImages);
 
-                        document.getElementsByClassName("wrapSpotContent")[0].appendChild(spotImageText).appendChild(spotImageFigure).appendChild(spotImage);
+                            document.getElementsByClassName("wrapSpotContent")[0].appendChild(spotImageText).appendChild(spotImageFigure).appendChild(spotImage);
 
-                        // spotTextName
-                        var spotTexts=spotData.data[displayQuantity].name;
-                        var spotTextName=document.createElement("spotTextName");
-                        spotTextName.textContent=spotTexts;
+                            // spotTextName
+                            var spotTexts=spotData.data[displayQuantity].name;
+                            var spotTextName=document.createElement("spotTextName");
+                            spotTextName.textContent=spotTexts;
 
-                        spotImageText.appendChild(spotTextName);
+                            spotImageText.appendChild(spotTextName);
 
-                        // spotTextMrtCat
-                        var spotTextMrtCat=document.createElement("spotTextMrtCat");
+                            // spotTextMrtCat
+                            var spotTextMrtCat=document.createElement("spotTextMrtCat");
 
-                        var spotTextMrts=spotData.data[displayQuantity].mrt;
-                        var spotTextMrt=document.createElement("spotTextMrt");
-                        spotTextMrt.textContent=spotTextMrts;
-                        spotTextMrtCat.appendChild(spotTextMrt);
+                            var spotTextMrts=spotData.data[displayQuantity].mrt;
+                            var spotTextMrt=document.createElement("spotTextMrt");
+                            spotTextMrt.textContent=spotTextMrts;
+                            spotTextMrtCat.appendChild(spotTextMrt);
 
-                        var spotTextCats=spotData.data[displayQuantity].category;
-                        var spotTextCat=document.createElement("spotTextCat");
-                        spotTextCat.textContent=spotTextCats;
-                        spotTextMrtCat.appendChild(spotTextCat);
+                            var spotTextCats=spotData.data[displayQuantity].category;
+                            var spotTextCat=document.createElement("spotTextCat");
+                            spotTextCat.textContent=spotTextCats;
+                            spotTextMrtCat.appendChild(spotTextCat);
 
-                        spotImageText.appendChild(spotTextMrtCat);
-                    }
-                    if (page >= spotData.nextPage){
-                        observer.disconnect(spotFooter);
+                            spotImageText.appendChild(spotTextMrtCat);
+                        };
+                        if (page > spotData.nextPage){
+                            observer.disconnect(spotFooter);
+                        };
+                        console.log(page);
+                        console.log(spotData);
                     };
-                    console.log(spotData.nextPage)
+                    spots.send();
                 };
-                spots.send();
-            })
+            });
         }, options);
         observer.observe(spotFooter);
     </script>
