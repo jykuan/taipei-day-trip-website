@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,8 +61,10 @@
 
                 // spotTextName
                 var spotTexts=spotData.data[displayQuantity].name;
-                var spotTextName=document.createElement("spotTextName");
+                var spotTextName=document.createElement("a");
                 spotTextName.textContent=spotTexts;
+                spotTextName.setAttribute("href", "/attraction/"+spotData.data[displayQuantity].id);
+                spotTextName.setAttribute("title", spotData.data.name);
 
                 spotImageText.appendChild(spotTextName);
 
@@ -118,8 +121,10 @@
 
                         // spotTextName
                         var spotTexts=data.data[resetDisplayQuantity].name;
-                        var spotTextName=document.createElement("spotTextName");
+                        var spotTextName=document.createElement("a");
                         spotTextName.textContent=spotTexts;
+                        spotTextName.setAttribute("href", "/attraction/"+data.data[resetDisplayQuantity].id);
+                        spotTextName.setAttribute("title", data.data[resetDisplayQuantity].name);
 
                         spotImageText.appendChild(spotTextName);
 
@@ -142,50 +147,54 @@
                     var spotFooter=document.getElementsByClassName("spotFooter")[0];
                     var observer=new IntersectionObserver(function(entries, observer){
                         entries.forEach(entry => {
-                            var resetSpot=new XMLHttpRequest();
-                            page++;
-                            resetSpot.open("GET","/api/attractions?page="+String(page)+"&keyword="+spotNameSearch,true);
-                            resetSpot.onload=function(){
-                                spotData=JSON.parse(resetSpot.responseText);
-                                for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
-                                    var spotImageText=document.createElement("spotImageText");
+                            if (entry.isIntersecting == true){
+                                var resetSpot=new XMLHttpRequest();
+                                page++;
+                                resetSpot.open("GET","/api/attractions?page="+String(page)+"&keyword="+spotNameSearch,true);
+                                resetSpot.onload=function(){
+                                    spotData=JSON.parse(resetSpot.responseText);
+                                    for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
+                                        if (spotData.data[displayQuantity] == null){
+                                            observer.disconnect(spotFooter);
+                                        };
+                                        var spotImageText=document.createElement("spotImageText");
 
-                                    // spotImage
-                                    var spotImageFigure=document.createElement("spotImageFigure");
-                                    var spotImages=spotData.data[displayQuantity].images[0];
-                                    var spotImage=document.createElement("img");
-                                    spotImage.setAttribute("src", spotImages);
+                                        // spotImage
+                                        var spotImageFigure=document.createElement("spotImageFigure");
+                                        var spotImages=spotData.data[displayQuantity].images[0];
+                                        var spotImage=document.createElement("img");
+                                        spotImage.setAttribute("src", spotImages);
 
-                                    document.getElementsByClassName("wrapSpotContent")[0].appendChild(spotImageText).appendChild(spotImageFigure).appendChild(spotImage);
+                                        document.getElementsByClassName("wrapSpotContent")[0].appendChild(spotImageText).appendChild(spotImageFigure).appendChild(spotImage);
 
-                                    // spotTextName
-                                    var spotTexts=spotData.data[displayQuantity].name;
-                                    var spotTextName=document.createElement("spotTextName");
-                                    spotTextName.textContent=spotTexts;
+                                        // spotTextName
+                                        var spotTexts=spotData.data[displayQuantity].name;
+                                        var spotTextName=document.createElement("a");
+                                        spotTextName.textContent=spotTexts;
+                                        spotTextName.setAttribute("href", "/attraction/"+spotData.data[displayQuantity].id);
+                                        spotTextName.setAttribute("title", spotData.data[displayQuantity].name)
 
-                                    spotImageText.appendChild(spotTextName);
+                                        spotImageText.appendChild(spotTextName);
 
-                                    // spotTextMrtCat
-                                    var spotTextMrtCat=document.createElement("spotTextMrtCat");
+                                        // spotTextMrtCat
+                                        var spotTextMrtCat=document.createElement("spotTextMrtCat");
 
-                                    var spotTextMrts=spotData.data[displayQuantity].mrt;
-                                    var spotTextMrt=document.createElement("spotTextMrt");
-                                    spotTextMrt.textContent=spotTextMrts;
-                                    spotTextMrtCat.appendChild(spotTextMrt);
+                                        var spotTextMrts=spotData.data[displayQuantity].mrt;
+                                        var spotTextMrt=document.createElement("spotTextMrt");
+                                        spotTextMrt.textContent=spotTextMrts;
+                                        spotTextMrtCat.appendChild(spotTextMrt);
 
-                                    var spotTextCats=spotData.data[displayQuantity].category;
-                                    var spotTextCat=document.createElement("spotTextCat");
-                                    spotTextCat.textContent=spotTextCats;
-                                    spotTextMrtCat.appendChild(spotTextCat);
+                                        var spotTextCats=spotData.data[displayQuantity].category;
+                                        var spotTextCat=document.createElement("spotTextCat");
+                                        spotTextCat.textContent=spotTextCats;
+                                        spotTextMrtCat.appendChild(spotTextCat);
 
-                                    spotImageText.appendChild(spotTextMrtCat);
-                                };     
-                                console.log(data.nextPage);
-                                // if (page >= data.nextPage){
-                                //     observer.disconnect(spotFooter);
-                                // };
+                                        spotImageText.appendChild(spotTextMrtCat);
+                                    };     
+                                    console.log(data.nextPage);
+                                };
+                                resetSpot.send();
                             };
-                            resetSpot.send();
                         })
                     }, options);
                     observer.observe(spotFooter);
@@ -196,7 +205,6 @@
         // InfiniteScroll
         var observer=new IntersectionObserver(function(entries, observer){
             entries.forEach(entry => {
-                // console.log(entry.isIntersecting);
                 if (entry.isIntersecting == true){
                     var spots=new XMLHttpRequest();
                     page++;
@@ -204,6 +212,9 @@
                     spots.onload=function(){
                         spotData=JSON.parse(spots.responseText);
                         for (var displayQuantity=0; displayQuantity<12; displayQuantity++){
+                            if (spotData.data[displayQuantity] == null){
+                                observer.disconnect(spotFooter);
+                            };
                             var spotImageText=document.createElement("spotImageText");
 
                             // spotImage
@@ -216,8 +227,10 @@
 
                             // spotTextName
                             var spotTexts=spotData.data[displayQuantity].name;
-                            var spotTextName=document.createElement("spotTextName");
+                            var spotTextName=document.createElement("a");
                             spotTextName.textContent=spotTexts;
+                            spotTextName.setAttribute("href", "/attraction/"+spotData.data[displayQuantity].id);
+                            spotTextName.setAttribute("title", spotData.data[displayQuantity].name);
 
                             spotImageText.appendChild(spotTextName);
 
@@ -236,11 +249,6 @@
 
                             spotImageText.appendChild(spotTextMrtCat);
                         };
-                        if (page > spotData.nextPage){
-                            observer.disconnect(spotFooter);
-                        };
-                        console.log(page);
-                        console.log(spotData);
                     };
                     spots.send();
                 };

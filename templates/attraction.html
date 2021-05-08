@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北一日遊</title>
+
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'/>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="wrap wrapHeader">
+            <h1><a href="/">台北一日遊</a></h1>
+            <ul>
+                <li><a href="#">預定行程</a></li>
+                <li><a href="#">註冊</a></li>
+                <li><a href="#">登入</a></li>
+            </ul>
+        </div>
+    </header>
+    <section class="image-date">
+        <div class="wrap wrapImageDate">
+            <figure class="spotImage"></figure>
+            <div class="textDate">
+                <div class="text"></div>
+                <div class="date">
+                    <h2>訂購導覽行程</h2>
+                    <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
+                    <div class="sectionSelectDate pure-form">
+                        <label for="selectDate" class="labelDate">選擇日期：</label>
+                        <input type="date" name="selectDate" id="selectDate">
+                    </div>
+                    <div class="selectTimeRadio">
+                        <p class="labelTime">選擇時間：</p>
+                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked">
+                        <label for="selectFirstHalfDay" onclick="selectFirstHalfDay()">上半天</label>
+                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay">
+                        <label for="selectSecondHalfDay" onclick="selectSecondHalfDay()">下半天</label>
+                    </div>
+                    <h3>導覽費用：<span class="selectPrice">新台幣 2000 元</span></h3>
+                    <button class="pure-button">開始預定行程</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="text">
+        <div class="wrap wrapSpotData">
+            <div class="description"></div>
+            <div class="address">
+                <h4>景點地址：</h4>
+            </div>
+            <div class="transport">
+                <h4>交通方式：</h4>
+            </div>
+        </div>
+    </section>
+    <footer class="spotFooter">
+        <h3>COPYRIGHT <i class="far fa-copyright"></i> 2021 台北一日遊</h3>
+    </footer>
+    <script type="text/javascript">
+        // HomePage Onloadvar 
+        console.log(typeof(location.pathname))
+        var spot=new XMLHttpRequest();
+        spot.open("GET","/api"+String(location.pathname),true);
+
+        spot.onload=function(){
+            var spotData=JSON.parse(this.responseText);
+
+            // spotImage
+            var spotImage=document.createElement("img");
+            spotImage.setAttribute("src", spotData.data.images[0]);
+
+            document.getElementsByClassName("spotImage")[0].appendChild(spotImage);
+
+            // spotTextName
+            var spotTexts=spotData.data.name;
+            var spotTextName=document.createElement("spotTextName");
+            spotTextName.textContent=spotTexts;
+            
+            document.getElementsByClassName("text")[0].appendChild(spotTextName);
+
+            // spotTextMrtCat
+            var spotTextMrtCat=document.createElement("spotTextMrtCat");
+            spotTextMrtCat.textContent=spotData.data.category+" at "+spotData.data.mrt
+
+            document.getElementsByClassName("text")[0].appendChild(spotTextMrtCat);
+
+            // spotData
+            document.getElementsByClassName("description")[0].textContent=spotData.data.description;
+
+            var spotTextAddress=document.createElement("spotTextAddress");
+            spotTextAddress.textContent=spotData.data.address;
+            document.getElementsByClassName("address")[0].appendChild(spotTextAddress);
+
+            var spotTextTransport=document.createElement("spotTextTransport");
+            spotTextTransport.textContent=spotData.data.transport;
+            document.getElementsByClassName("transport")[0].appendChild(spotTextTransport);
+        };
+        spot.send();
+
+        // SelectFirstHalfDay Onclick
+        function selectFirstHalfDay(){
+            document.getElementsByClassName("selectPrice")[0].innerHTML="";
+            var selectFirstHalfDay=document.createElement("selectFirstHalfDay");
+            selectFirstHalfDay.textContent="新台幣 2000 元";
+            document.getElementsByClassName("selectPrice")[0].appendChild(selectFirstHalfDay);
+        };
+
+        // SelectSecondHalfDay Onclick
+        function selectSecondHalfDay(){
+            document.getElementsByClassName("selectPrice")[0].innerHTML="";
+            var selectSecondHalfDay=document.createElement("selectSecondHalfDay");
+            selectSecondHalfDay.textContent="新台幣 2500 元";
+            document.getElementsByClassName("selectPrice")[0].appendChild(selectSecondHalfDay);
+        };
+    </script>
+</body>
+</html>

@@ -83,7 +83,7 @@ img{
     font-size:16px;
 }
 
-/* Pure-bottom Start */
+/* Pure-button Start */
 .pure-button{
     /* Structure */
     display: inline-block;
@@ -125,6 +125,9 @@ body{
     position:relative;
     max-width:1200px;
     margin:0 auto;
+}
+header{
+    border-bottom:1px solid #E8E8E8;
 }
 .wrapHeader{
     display:flex;
@@ -278,7 +281,7 @@ body{
     height:100%;
     object-fit:cover;
 }
-.wrapSpotContent spotImageText spotTextName{
+.wrapSpotContent spotImageText a{
     display:block;
     height:40px;
     overflow:hidden;
@@ -286,6 +289,11 @@ body{
     line-height:1.5;
     padding:15px 10px 0px 10px;
     margin-bottom:20px;
+    color:#757575;
+    text-decoration:none;
+}
+.wrapSpotContent spotImageText a:hover{
+    color:#448899;
 }
 .wrapSpotContent spotImageText spotTextMrtCat{
     display:flex;
@@ -321,4 +329,98 @@ footer{
     display:flex;
     justify-content:center;
     align-items:center;
+}
+.image-date .wrapImageDate{
+    padding:15px 40px;
+}
+
+/* attraction.html */
+.wrapImageDate{
+    border-bottom:1px solid #e8e8e8;
+    padding:40px 15px;
+    color:#666666;
+}
+.image-date .wrapImageDate{
+    display:flex;
+    justify-content:space-between;
+}
+.image-date .wrapImageDate .spotImage{
+    display:block;
+    width:540px;
+    height:400px;
+    overflow:hidden;
+    border-radius:5px;
+    margin-right:30px;
+}
+.image-date .wrapImageDate .spotImage img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.image-date .wrapImageDate .textDate spotTextName{
+    display:block;
+    font-size:24px;
+    line-height:24px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+.image-date .wrapImageDate .textDate spotTextMrtCat{
+    display:block;
+    font-size:16px;
+    line-height:16px;
+    margin-bottom:20px;
+}
+.image-date .wrapImageDate .textDate .date{
+    width:100%;
+    background-color:#E8E8E8;
+    border-radius:5px;
+    font-size:16px;
+    padding:20px;
+}
+.image-date .wrapImageDate .textDate .date h2{
+    font-weight:bold;
+    margin-bottom:20px;
+}
+.image-date .wrapImageDate .textDate .date p{
+    margin-bottom:20px;
+}
+.textDate{
+    width:600px;
+}
+.sectionSelectDate{
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    margin-bottom:20px;
+}
+.date .pure-form input[type="date"]{
+    height:35px;
+    width:50%;
+}
+.textDate .date .labelTime{
+    display:inline-block;
+}
+.text .wrapSpotData{
+    font-size:16px;
+    line-height:1.5;
+    padding:50px 10px 120px 10px;
+    color:#666666;
+}
+.text .wrapSpotData .description, .text .wrapSpotData .address, .text .wrapSpotData .transport{
+    margin-bottom:25px;
+}
+.text .wrapSpotData .address h4, .text .wrapSpotData .transport h4{
+    font-weight:bold;
+    line-height:1.8;
+}
+.textDate .date .pure-button{
+    margin-top:25px;
+    font-size:16px;
+    color:#FFFFFF;
+    background-color:#448899;
+    border-radius:5px;
+}
+.textDate .date .pure-button:hover{
+    background-color:#387180;
 }

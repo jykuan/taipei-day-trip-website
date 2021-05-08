@@ -132,10 +132,6 @@ def apiAttractions():
 						pdimage.append(img)
 			attraction["images"]=pdimage
 			sqlSearchResult.append(attraction)
-		# name=[]
-		# cursorTripData.execute("SELECT stitle FROM TaipeiTripData where stitle LIKE %s;", ("%"+keyword+"%",))
-		# for stitleKeyword in cursorTripData: 
-		# 	name.append(stitleKeyword[0])
 	apiAttractionsJson={"nextPage":page+1, "data":sqlSearchResult}
 	if len(sqlSearchResult)==0:
 		apiAttractionsJson={"nextPage":None, "data":None}
