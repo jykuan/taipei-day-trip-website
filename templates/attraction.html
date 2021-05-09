@@ -22,7 +22,11 @@
     </header>
     <section class="image-date">
         <div class="wrap wrapImageDate">
-            <figure class="spotImage"></figure>
+            <figure class="spotImage">
+                <i class="fas fa-arrow-circle-left arrowLeft" onclick="arrowLeft()"></i>
+                <i class="fas fa-arrow-circle-right arrowRight" onclick="arrowRight()"></i>
+                <img src="" alt="spotImage" class="spotImg">
+            </figure>
             <div class="textDate">
                 <div class="text"></div>
                 <div class="date">
@@ -61,7 +65,8 @@
     </footer>
     <script type="text/javascript">
         // HomePage Onloadvar 
-        console.log(typeof(location.pathname))
+        // console.log(typeof(location.pathname))
+        var spotImageData;
         var spot=new XMLHttpRequest();
         spot.open("GET","/api"+String(location.pathname),true);
 
@@ -69,10 +74,9 @@
             var spotData=JSON.parse(this.responseText);
 
             // spotImage
-            var spotImage=document.createElement("img");
-            spotImage.setAttribute("src", spotData.data.images[0]);
-
-            document.getElementsByClassName("spotImage")[0].appendChild(spotImage);
+            document.getElementsByClassName("spotImg")[0].setAttribute("src", spotData.data.images[0]);
+            spotImageData=spotData.data.images;
+            console.log(spotImageData);
 
             // spotTextName
             var spotTexts=spotData.data.name;
@@ -114,6 +118,26 @@
             var selectSecondHalfDay=document.createElement("selectSecondHalfDay");
             selectSecondHalfDay.textContent="新台幣 2500 元";
             document.getElementsByClassName("selectPrice")[0].appendChild(selectSecondHalfDay);
+        };
+
+        var imgSequence=0;
+        // ArrowLeft Onclick
+        function arrowLeft(){
+            if (imgSequence <= 0){
+                imgSequence+=spotImageData.length;
+            };
+            document.getElementsByClassName("spotImg")[0].innerHTML="";
+            console.log(spotImageData[imgSequence]);
+            document.getElementsByClassName("spotImg")[0].setAttribute("src", spotImageData[--imgSequence]);
+        };
+
+        // ArrowRight Onclick
+        function arrowRight(){
+            if (imgSequence >= spotImageData.length){
+                imgSequence=0;
+            };
+            document.getElementsByClassName("spotImg")[0].innerHTML="";
+            document.getElementsByClassName("spotImg")[0].setAttribute("src", spotImageData[imgSequence++]);
         };
     </script>
 </body>
