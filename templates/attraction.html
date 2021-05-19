@@ -15,8 +15,9 @@
             <h1><a href="/">台北一日遊</a></h1>
             <ul>
                 <li><a href="#">預定行程</a></li>
-                <li><a href="#">註冊</a></li>
-                <li><a href="#">登入</a></li>
+                <li><a class="headerRegister" onclick="register()">註冊</a></li>
+                <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
+                <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
             </ul>
         </div>
     </header>
@@ -38,9 +39,9 @@
                     </div>
                     <div class="selectTimeRadio">
                         <p class="labelTime">選擇時間：</p>
-                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked">
+                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked" onclick="selectFirstHalfDay()">
                         <label for="selectFirstHalfDay" onclick="selectFirstHalfDay()">上半天</label>
-                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay">
+                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay" onclick="selectSecondHalfDay()">
                         <label for="selectSecondHalfDay" onclick="selectSecondHalfDay()">下半天</label>
                     </div>
                     <h3>導覽費用：<span class="selectPrice">新台幣 2000 元</span></h3>
@@ -63,6 +64,40 @@
     <footer class="spotFooter">
         <h3>COPYRIGHT <i class="far fa-copyright"></i> 2021 台北一日遊</h3>
     </footer>
+    <div class="signIn">
+        <div class="signInColorBar"></div>
+        <h2>登入會員帳號</h2>
+        <button class="signInClose" onclick="signInClose()">X</button>
+        <form class="pure-form signInForm" action="/api/user" method="PATCH">
+            <input type="email" name="signInEmail" id="signInEmail" placeholder="輸入電子信箱">
+            <input type="password" name="signInPassword" id="signInPassword" placeholder="輸入密碼">
+            <!-- <button class="pure-button signInButton" onclick="signInStatus()">登入帳戶</button> -->
+            <submit class="pure-button signInButton" onclick="signInStatus()">登入帳戶</submit>
+        </form>
+        <div class="signInRegister">
+            <p>還沒有帳戶？</p>
+            <h3><a onclick="switchRegister()">點此註冊</a></h3>
+        </div>
+        <p class="signInStatus">- 信箱或密碼錯誤 -</p>
+    </div>
+    <div class="register">
+        <div class="registerColorBar"></div>
+        <h2>註冊會員帳號</h2>
+        <button class="registerClose" onclick="registerClose()">X</button>
+        <form class="pure-form registerForm" action="/api/user" method="POST">
+            <input type="text" name="registerName" id="registerName" placeholder="輸入姓名">
+            <input type="email" name="registerEmail" id="registerEmail" placeholder="輸入電子信箱">
+            <input type="password" name="registerPassword" id="registerPassword" placeholder="輸入密碼">
+            <!-- <button class="pure-button registerButton">註冊新帳戶</button> -->
+            <submit class="pure-button registerButton" onclick="registerStatus()">註冊新帳戶</submit>
+        </form>
+        <div class="registerSignIn">
+            <p>已經有帳戶了？</p>
+            <h3><a onclick="switchSignIn()">點此登入</a></h3>
+        </div>
+        <p class="registerStatus">- 格式錯誤或信箱已被註冊 -</p>
+        <p class="registerSuccess">- 註冊成功 -</p>
+    </div>
     <script type="text/javascript">
         // HomePage Onloadvar 
         // console.log(typeof(location.pathname))
@@ -71,6 +106,19 @@
         spot.open("GET","/api"+String(location.pathname),true);
 
         spot.onload=function(){
+            fetch(`/api/user`,{
+                method:"GET"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    console.log(data);
+                    if (data.data != null){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                    };
+                })
+            })
             var spotData=JSON.parse(this.responseText);
 
             // spotImage
@@ -138,6 +186,123 @@
             };
             document.getElementsByClassName("spotImg")[0].innerHTML="";
             document.getElementsByClassName("spotImg")[0].setAttribute("src", spotImageData[imgSequence++]);
+        };
+
+        // SignIn Onclick、Register Onclick
+        var showSignIn;
+        function signIn(){
+            showSignIn=document.querySelector(".signIn").style.display="block";
+            showSignInError=document.querySelector(".signInStatus").style.display="none";
+        };
+        var showRegister;
+        function register(){
+            showRegister=document.querySelector(".register").style.display="block";
+            showRegsiterError=document.querySelector(".registerStatus").style.display="none";
+            showRegisterSuccess=document.querySelector(".registerSuccess").style.display="none";
+        };
+
+        // SignInClose Onclick、RigisterClose Onclick
+        function signInClose(){
+            showSignIn=document.querySelector(".signIn").style.display="none";
+            showSignInError=document.querySelector(".signInStatus").style.display="none";
+        };
+        function registerClose(){
+            showRegister=document.querySelector(".register").style.display="none";
+            showRegsiterError=document.querySelector(".registerStatus").style.display="none";
+            showRegisterSuccess=document.querySelector(".registerSuccess").style.display="none";
+        };
+
+        // SwitchRegister Onclick、SwitchSignIn Onclick
+        function switchRegister(){
+            showSignIn=document.querySelector(".signIn").style.display="none";
+            showRegister=document.querySelector(".register").style.display="block";
+            showRegsiterError=document.querySelector(".registerStatus").style.display="none";
+        };
+        function switchSignIn(){
+            showRegister=document.querySelector(".register").style.display="none";
+            showSignIn=document.querySelector(".signIn").style.display="block";
+            showSignInError=document.querySelector(".signInStatus").style.display="none";
+            showRegisterSuccess=document.querySelector(".registerSuccess").style.display="none";
+        };
+
+        // SignInStatus Onclick、RegisterStatus Onclick
+        function signInStatus(){
+            showSignInError=document.querySelector(".signInStatus").style.display="none";
+            var signInEmail=document.getElementById("signInEmail");
+            var signInPassword=document.getElementById("signInPassword");
+            var userData={
+                signInEmail:signInEmail.value,
+                signInPassword:signInPassword.value
+            }
+            fetch(`/api/user`,{
+                method:"PATCH",
+                credentials:"include",
+                body:JSON.stringify(userData),
+                cache:"no-cache",
+                headers:new Headers({
+                    "content-type":"application/json"
+                })
+            })
+            .then(function(response){
+                if (response.status !== 200){
+                    console.log("Response status was not 200");
+                    console.log("Hello")
+                    showSignInError=document.querySelector(".signInStatus").style.display="block";
+                    return ;
+                };
+                response.json().then(function(data){
+                    // console.log(data);
+                    window.location.replace(location.href);
+                })
+            })
+        };
+        function registerStatus(){
+            showRegsiterError=document.querySelector(".registerStatus").style.display="none";
+            var registerName=document.getElementById("registerName");
+            var registerEmail=document.getElementById("registerEmail");
+            var registerPassword=document.getElementById("registerPassword");
+            var userData={
+                registerName:registerName.value,
+                registerEmail:registerEmail.value,
+                registerPassword:registerPassword.value
+            }
+            fetch(`/api/user`,{
+                method:"POST",
+                credentials:"include",
+                body:JSON.stringify(userData),
+                cache:"no-cache",
+                headers:new Headers({
+                    "content-type":"application/json"
+                })
+            })
+            .then(function(response){
+                if (response.status !== 200){
+                    console.log("Response status was not 200");
+                    showRegsiterError=document.querySelector(".registerStatus").style.display="block";
+                    showRegisterSuccess=document.querySelector(".registerSuccess").style.display="none";
+                    return ;
+                };
+                response.json().then(function(data){
+                    showRegisterSuccess=document.querySelector(".registerSuccess").style.display="block";
+                })
+            })
+        };
+
+        // SignOut Onclick
+        function signOut(){
+            fetch(`/api/user`,{
+                method:"DELETE"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    console.log(data);
+                    if (data.ok == true){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
+                    };
+                })
+            })
         };
     </script>
 </body>

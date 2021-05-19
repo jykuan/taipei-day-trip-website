@@ -153,9 +153,15 @@ header{
     font-size:16px;
     color:#666666;
     text-decoration:none;
+    cursor:pointer;
 }
 .wrapHeader ul li a:hover{
     color:#448899;
+}
+.wrapHeader ul li .headerSignOut{
+    display:none;
+    margin-top:0px;
+    margin-bottom:0px;
 }
 @media screen and (max-width:600px){
     .wrapHeader ul li a{
@@ -461,5 +467,88 @@ footer{
     .text .wrapSpotData{
         padding-left:20px;
         padding-right:20px;
+    }
+}
+/* 註冊、登入彈跳視窗 */
+.signIn, .register{
+    display:none;
+    width:340px;
+    position:fixed;
+    top:80px;
+    left:50%;
+    transform:translate(-170px, 0px);
+    background-color: #FFFFFF;
+    border-radius:6px;
+    color:#666666;
+    padding-bottom:15px;
+    box-shadow:0px 4px 60px #AAAAAA;
+}
+.signIn .signInColorBar, .register .registerColorBar{
+    height:10px;
+    background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
+    border-top-left-radius:6px;
+    border-top-right-radius:6px;
+}
+.signIn h2, .register h2{
+    font-size:24px;
+    text-align:center;
+    font-weight:bold;
+    margin-top:15px;
+}
+.signIn .signInClose, .register .registerClose{
+    position:absolute;
+    top:17px;
+    right:17px;
+    border:0px;
+    background-color:#FFFFFF;
+    font-size:16px;
+    cursor:pointer;
+}
+.signIn .signInClose:hover, .register .registerClose:hover{
+    color:#448899;
+}
+.signIn .signInForm, .register .registerForm{
+    margin:15px 15px 15px 15px;
+}
+#signInEmail, #signInPassword, #registerName, #registerEmail, #registerPassword{
+    padding:15px;
+    font-size:16px;
+    margin-bottom:10px;
+}
+.signIn .signInButton, .register .registerButton{
+    width:100%;
+    font-size:18px;
+    padding:10px 0px;
+    color:#FFFFFF;
+    background-color:#448899;
+    border-radius:5px;
+}
+.signIn .signInButton:hover, .register .registerButton:hover{
+    background-color:#387180;
+}
+.signIn .signInRegister, .register .registerSignIn{
+    display:flex;
+    justify-content:center;
+    font-size:16px;
+}
+.signIn .signInRegister a, .register .registerSignIn a{
+    text-decoration:none;
+    color:#666666;
+    font-weight:bold;
+}
+.signIn .signInRegister a:hover, .register .registerSignIn a:hover{
+    color:#448899;
+    cursor:pointer;
+}
+.signInStatus, .registerStatus, .registerSuccess{
+    display:none;
+    text-align:center;
+    color:rgb(211, 86, 103);
+    font-size:14px;
+    margin-top:15px;
+}
+@media screen and (max-width:600px){
+    .signIn, .register{
+        z-index:12;
     }
 }

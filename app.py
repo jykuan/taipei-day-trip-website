@@ -1,5 +1,8 @@
 from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response, Response
 # import json
+from flask_cors import CORS
+import os
+import string
 import mysql.connector
 from mysql.connector import Error
 
@@ -13,11 +16,22 @@ cursorTripData=mydb.cursor(buffered=True)
 cursorTripData.execute("SELECT DATABASE();")	
 
 app=Flask(__name__)
+app.config['SECRET_KEY']=os.urandom(24)
 app.config['JSON_AS_ASCII']=False
 # app.config['JSONIFY_MIMETYPE'] ="charset=utf-8"
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config["Access-Control-Allow-Origin"]="*"
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+@app.before_request
+def before_request():
+    if request.path in ["", "/", "/api/attraction/<attractionId>", "/api/attractions", "/api/user", "/attraction/<id>"] or "templates" in request.path:
+        return None
+    session.permanent=True
+    user=session.get("status")
+
+    if user==False:
+        return redirect("/")
 
 # Pages
 @app.route("/")
@@ -137,6 +151,89 @@ def apiAttractions():
 		apiAttractionsJson={"nextPage":None, "data":None}
 	# return json.dumps(apiAttractionsJson, ensure_ascii=False)
 	return jsonify(apiAttractionsJson)
+
+@app.route("/api/user", methods=["GET", "POST", "PATCH", "DELETE"])
+def apiUser():
+	sqlSearchResult={}
+	replyMessage={}
+	if request.method == "GET":
+		# requestEmail=request.args.get("signInEmail")
+		# requestPassword=request.args.get("signInPassword")
+		cursorTripData.execute("select id, email, password from user where email=%s;", (session.get("status"),))
+		for (id, email, password) in cursorTripData:
+			sqlSearchResult={
+				"data":{
+					"id":id,
+					"email":email,
+					"password":password
+				}
+			}
+		# if cursorTripData.rowcount>0:
+		# 	if sqlSearchResult["data"]["email"]==requestEmail and sqlSearchResult["data"]["password"]==requestPassword:
+		# 		session["status"]=sqlSearchResult["data"]["email"]
+		# 		return jsonify(sqlSearchResult), 200
+		# 	else:
+		# 		sqlSearchResult["data"]=None
+		# 		return jsonify(sqlSearchResult)
+		# else:
+		# 	sqlSearchResult["data"]=None
+		# 	dd={"apple":session.get("status"),"a":sqlSearchResult["data"]}
+		# 	# return jsonify(sqlSearchResult)
+		# 	print(session.get("status"))
+		# 	return jsonify(dd)
+		# return jsonify(sqlSearchResult), 200
+		return jsonify(sqlSearchResult)
+	if request.method == "POST":
+		inquireUserData=request.get_json()
+		print(inquireUserData)
+		cursorTripData.execute("select name, email, password from user where email=%s;", (inquireUserData["registerEmail"],))
+		for (name, email, password) in cursorTripData:
+			sqlSearchResult={
+				"name":name,
+				"email":email,
+				"password":password
+			}
+		if cursorTripData.rowcount<=0 and inquireUserData["registerName"] != "" and inquireUserData["registerEmail"] != "" and inquireUserData["registerPassword"] != "":
+			sql='INSERT INTO user (name, email, password) VALUES (%s, %s, %s);'
+			newUser=(inquireUserData["registerName"], inquireUserData["registerEmail"], inquireUserData["registerPassword"])
+			cursor=mydb.cursor()
+			cursor.execute(sql, newUser)
+			mydb.commit()
+			replyMessage["ok"]=True
+			return jsonify(replyMessage), 200
+		else:
+			replyMessage["error"]=True
+			replyMessage["message"]="註冊失敗，重複的 Email 或其他原因"
+			print(replyMessage)
+			return jsonify(replyMessage), 400
+	if request.method == "PATCH":
+		inquireUserData=request.get_json()
+		# print(inquireUserData)
+		cursorTripData.execute("select email, password from user where email=%s;", (inquireUserData["signInEmail"],))
+		for (email, password) in cursorTripData:
+			sqlSearchResult={
+				"email":email,
+				"password":password
+			}
+		if cursorTripData.rowcount>0:
+			if sqlSearchResult["email"]==inquireUserData["signInEmail"] and sqlSearchResult["password"]==inquireUserData["signInPassword"]:
+				session["status"]=sqlSearchResult["email"]
+				replyMessage["ok"]=True
+				# print(session.get("status"))
+				return jsonify(replyMessage), 200
+			else:
+				replyMessage["error"]=True
+				replyMessage["message"]="格式錯誤或信箱已被註冊"
+				return jsonify(replyMessage), 400
+		else:
+			replyMessage["error"]=True
+			replyMessage["message"]="格式錯誤或信箱已被註冊"
+			return jsonify(replyMessage), 400
+	if request.method == "DELETE":
+		print(str(session["status"])+", Logged Out")
+		session["status"]=False
+		replyMessage["ok"]=True
+		return jsonify(replyMessage), 200
 
 @app.route("/attraction/<id>")
 def attraction(id):
