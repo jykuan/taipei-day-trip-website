@@ -157,8 +157,6 @@ def apiUser():
 	sqlSearchResult={}
 	replyMessage={}
 	if request.method == "GET":
-		# requestEmail=request.args.get("signInEmail")
-		# requestPassword=request.args.get("signInPassword")
 		cursorTripData.execute("select id, email, password from user where email=%s;", (session.get("status"),))
 		for (id, email, password) in cursorTripData:
 			sqlSearchResult={
@@ -168,20 +166,6 @@ def apiUser():
 					"password":password
 				}
 			}
-		# if cursorTripData.rowcount>0:
-		# 	if sqlSearchResult["data"]["email"]==requestEmail and sqlSearchResult["data"]["password"]==requestPassword:
-		# 		session["status"]=sqlSearchResult["data"]["email"]
-		# 		return jsonify(sqlSearchResult), 200
-		# 	else:
-		# 		sqlSearchResult["data"]=None
-		# 		return jsonify(sqlSearchResult)
-		# else:
-		# 	sqlSearchResult["data"]=None
-		# 	dd={"apple":session.get("status"),"a":sqlSearchResult["data"]}
-		# 	# return jsonify(sqlSearchResult)
-		# 	print(session.get("status"))
-		# 	return jsonify(dd)
-		# return jsonify(sqlSearchResult), 200
 		return jsonify(sqlSearchResult)
 	if request.method == "POST":
 		inquireUserData=request.get_json()
@@ -208,7 +192,6 @@ def apiUser():
 			return jsonify(replyMessage), 400
 	if request.method == "PATCH":
 		inquireUserData=request.get_json()
-		# print(inquireUserData)
 		cursorTripData.execute("select email, password from user where email=%s;", (inquireUserData["signInEmail"],))
 		for (email, password) in cursorTripData:
 			sqlSearchResult={
@@ -219,7 +202,6 @@ def apiUser():
 			if sqlSearchResult["email"]==inquireUserData["signInEmail"] and sqlSearchResult["password"]==inquireUserData["signInPassword"]:
 				session["status"]=sqlSearchResult["email"]
 				replyMessage["ok"]=True
-				# print(session.get("status"))
 				return jsonify(replyMessage), 200
 			else:
 				replyMessage["error"]=True
