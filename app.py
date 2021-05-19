@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response, Response
 # import json
-from flask_cors import CORS
+# from flask_cors import CORS
 import os
 import string
 import mysql.connector
