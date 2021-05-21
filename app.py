@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response, Response
 # import json
-# from flask_cors import CORS
+from flask_cors import CORS
 import os
 import string
 import mysql.connector
@@ -30,8 +30,8 @@ def before_request():
     session.permanent=True
     user=session.get("status")
 
-    if user==False:
-        return redirect("/")
+    # if user==False:
+    #     return redirect("/")
 
 # Pages
 @app.route("/")
@@ -166,6 +166,10 @@ def apiUser():
 					"password":password
 				}
 			}
+		userStatus=session.get("status")
+		if userStatus == False:
+			sqlSearchResult={}
+			return jsonify(sqlSearchResult)
 		return jsonify(sqlSearchResult)
 	if request.method == "POST":
 		inquireUserData=request.get_json()
