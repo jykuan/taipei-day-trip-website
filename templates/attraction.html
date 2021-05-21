@@ -7,7 +7,7 @@
     <title>台北一日遊</title>
 
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'/>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="http://54.178.32.137:3000/static/style.css">
 </head>
 <body>
     <header>
@@ -39,9 +39,9 @@
                     </div>
                     <div class="selectTimeRadio">
                         <p class="labelTime">選擇時間：</p>
-                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked" onclick="selectFirstHalfDay()">
+                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked">
                         <label for="selectFirstHalfDay" onclick="selectFirstHalfDay()">上半天</label>
-                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay" onclick="selectSecondHalfDay()">
+                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay">
                         <label for="selectSecondHalfDay" onclick="selectSecondHalfDay()">下半天</label>
                     </div>
                     <h3>導覽費用：<span class="selectPrice">新台幣 2000 元</span></h3>
@@ -287,7 +287,7 @@
                 })
             })
         };
-
+        
         // SignOut Onclick
         function signOut(){
             fetch(`/api/user`,{
