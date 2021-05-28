@@ -14,7 +14,7 @@
         <div class="wrap wrapHeader">
             <h1><a href="#">台北一日遊</a></h1>
             <ul>
-                <li><a href="#">預定行程</a></li>
+                <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
                 <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
                 <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
@@ -306,6 +306,25 @@
             });
         }, options);
         observer.observe(spotFooter);
+
+        // HeaderScheduled Onclick
+        function headerScheduled(){
+            fetch(`/api/user`,{
+                method:"GET"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    if (data.data != null){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        window.location.href="/booking"
+                    }else{
+                        showSignIn=document.querySelector(".signIn").style.display="block";
+                    }
+                })
+            })
+        };
 
         // SignIn Onclick、Register Onclick
         var showSignIn;

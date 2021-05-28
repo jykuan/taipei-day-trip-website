@@ -152,6 +152,36 @@ def apiAttractions():
 	# return json.dumps(apiAttractionsJson, ensure_ascii=False)
 	return jsonify(apiAttractionsJson)
 
+@app.route("/api/booking", methods=["GET", "POST", "DELETE"])
+def apiBooking():
+	replyMessage={}
+	if request.method == "POST":
+		global tripScheduled
+		tripScheduled=[]
+		inquireAttractionId=request.get_json()
+		print(session["status"])
+		print(inquireAttractionId)
+		if inquireAttractionId["attractionId"] != "" and inquireAttractionId["date"] != "" and inquireAttractionId["price"] != "":
+			tripScheduled.append(inquireAttractionId)
+			replyMessage["ok"]=True
+			return jsonify(replyMessage), 200
+		elif inquireAttractionId["attractionId"] == "" or inquireAttractionId["date"] == "":
+			replyMessage["error"]=True
+			replyMessage["message"]="格式錯誤或未填寫完成"
+			print("Sorry")
+			return jsonify(replyMessage), 400
+		else:
+			replyMessage["error"]=True
+			replyMessage["message"]="未登入系統"
+			return jsonify(replyMessage), 403
+	if request.method == "GET":
+		print(session["status"])
+		print(tripScheduled)
+		return jsonify(tripScheduled), 200
+	if request.method == "DELETE":
+		replyMessage["ok"]=True
+		return jsonify(replyMessage), 200
+
 @app.route("/api/user", methods=["GET", "POST", "PATCH", "DELETE"])
 def apiUser():
 	sqlSearchResult={}
@@ -227,18 +257,22 @@ def attraction(id):
 
 @app.route("/booking")
 def booking():
+	# userStatus=session.get("status")
+	# print(userStatus)
+	# if userStatus == False:
+	# 	return render_template("index.html")
 	return render_template("booking.html")
 
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
 	
-@app.errorhandler(500)
-def internal_error(error):
-	sqlSearchResult={
-		"error":True,
-		"message":"Error"
-	}
-	return json.dumps(sqlSearchResult), 500
+# @app.errorhandler(500)
+# def internal_error(error):
+# 	sqlSearchResult={
+# 		"error":True,
+# 		"message":"Error"
+# 	}
+# 	return json.dumps(sqlSearchResult), 500
 
 app.run(host="0.0.0.0", port=3000, debug=True)
