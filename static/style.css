@@ -567,7 +567,6 @@ footer{
 /* booking.html */
 .wrapBooking{
     color:#666666;
-    line-height:1.5;
 }
 .scheduled{
     padding:45px 0px 15px 100px;
@@ -675,15 +674,13 @@ footer{
     color:#666666;
 }
 @media screen and (max-width:600px){
-    .scheduled, .contactInformation, .paymentInformation{
-        padding-left:0px;
-    }
-    .wrapBooking .bookingPrice{
-        padding-right:0px;
-    }
     .wrapBooking{
         padding-left:10px;
         padding-right:10px;
+        line-height:1.5;
+    }
+    .scheduled, .contactInformation, .paymentInformation{
+        padding-left:0px;
     }
     .spotScheduled{
         display:block;
@@ -705,5 +702,8 @@ footer{
         bottom:0px;
         padding:20px 10px 15px 20px;
         margin:0px;
+    }
+    .wrapBooking .bookingPrice{
+        padding-right:0px;
     }
 }
