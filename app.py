@@ -196,7 +196,6 @@ def apiBooking():
 			return jsonify(replyMessage), 403
 	if request.method == "GET":
 		username=session.get("username")
-		print(session["spotScheduled"])
 		return jsonify(session["spotScheduled"]), 200
 	if request.method == "DELETE":
 		replyMessage["ok"]=True
@@ -217,7 +216,6 @@ def apiUser():
 					"password":password
 				}
 			}
-		print(sqlSearchResult)
 		userStatus=session.get("status")
 		if userStatus == False:
 			sqlSearchResult={}
@@ -225,7 +223,6 @@ def apiUser():
 		return jsonify(sqlSearchResult)
 	if request.method == "POST":
 		inquireUserData=request.get_json()
-		print(inquireUserData)
 		cursorTripData.execute("select name, email, password from user where email=%s;", (inquireUserData["registerEmail"],))
 		for (name, email, password) in cursorTripData:
 			sqlSearchResult={

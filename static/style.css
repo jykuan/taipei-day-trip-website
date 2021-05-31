@@ -567,11 +567,9 @@ footer{
 /* booking.html */
 .wrapBooking{
     color:#666666;
+    line-height:1.5;
 }
 .scheduled{
-    padding:45px 0px 40px 100px;
-}
-.sectionScheduled{
     padding:45px 0px 15px 100px;
 }
 .scheduled h4{
@@ -675,4 +673,37 @@ footer{
 .noScheduled{
     font-size:16px;
     color:#666666;
+}
+@media screen and (max-width:600px){
+    .scheduled, .contactInformation, .paymentInformation{
+        padding-left:0px;
+    }
+    .wrapBooking .bookingPrice{
+        padding-right:0px;
+    }
+    .wrapBooking{
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .spotScheduled{
+        display:block;
+        margin-bottom:0px;
+        position:relative;
+        padding-bottom:20px;
+    }
+    .spotScheduledData{
+        display:block;
+    }
+    .spotScheduledData figure{
+        width:100%;
+        margin-right:0px;
+        margin-bottom:15px;
+    }
+    .spotScheduled .iconDelete{
+        position:absolute;
+        right:0px;
+        bottom:0px;
+        padding:20px 10px 15px 20px;
+        margin:0px;
+    }
 }
