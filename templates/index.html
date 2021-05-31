@@ -17,7 +17,7 @@
                 <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
                 <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
-                <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
+                <li class="signOutLi"><span class="headerUsername"></span><a class="headerSignOut" onclick="signOut()">(登出)</a></li>
             </ul>
         </div>
     </header>
@@ -90,11 +90,12 @@
             })
             .then(function(response){
                 response.json().then(function(data){
-                    console.log(data);
+                    console.log(data)
                     if (data.data != null){
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        document.getElementsByClassName("headerUsername")[0].textContent=" | "+data.data.name;
                     };
                 })
             })
@@ -242,7 +243,6 @@
 
                                         spotImageText.appendChild(spotTextMrtCat);
                                     };     
-                                    console.log(data.nextPage);
                                 };
                                 resetSpot.send();
                             };
@@ -391,7 +391,6 @@
                     return ;
                 };
                 response.json().then(function(data){
-                    // console.log(data);
                     window.location.replace(location.href);
                 })
             })
@@ -435,11 +434,11 @@
             })
             .then(function(response){
                 response.json().then(function(data){
-                    console.log(data);
                     if (data.ok == true){
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
+                        showHeaderUsername=document.querySelector(".headerUsername").style.display="none";
                     };
                 })
             })

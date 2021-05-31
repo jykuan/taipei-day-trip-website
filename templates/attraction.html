@@ -18,7 +18,7 @@
                 <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
                 <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
-                <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
+                <li class="signOutLi"><span class="headerUsername"></span><a class="headerSignOut" onclick="signOut()">(登出)</a></li>
             </ul>
         </div>
     </header>
@@ -103,7 +103,7 @@
         // HomePage Onload
         // console.log(typeof(location.pathname))
         var userId;
-        var spotTripPrice;
+        var spotTripPrice=2000;
         var spot=new XMLHttpRequest();
         spot.open("GET","/api"+String(location.pathname),true);
 
@@ -113,11 +113,13 @@
             })
             .then(function(response){
                 response.json().then(function(data){
+                    console.log(data)
                     if (data.data != null){
                         userId=data;
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        document.getElementsByClassName("headerUsername")[0].textContent=" | "+data.data.name;
                     };
                 })
             })
@@ -271,7 +273,6 @@
                     return ;
                 };
                 response.json().then(function(data){
-                    // console.log(data);
                     window.location.replace(location.href);
                 })
             })
@@ -319,6 +320,7 @@
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
+                        showHeaderUsername=document.querySelector(".headerUsername").style.display="none";
                     };
                 })
             })
@@ -326,31 +328,32 @@
 
         // SpotScheduled Onclick
         function spotScheduled(){
-            console.log(userId)
             var testTest={};
             if (userId != undefined){
                 var attractionApi=String(location.pathname)
                 var attractionNumber=attractionApi.split("/")
                 var selectDate=document.getElementById("selectDate")
-                var attractionId={
-                    attractionId:Number(attractionNumber[2]),
+                var attractionData={
+                    attraction:Number(attractionNumber[2]),
                     date:selectDate.value,
                     price:spotTripPrice,
                     time:"morning"
                 };
-                if (attractionId.price == 2500){
-                    attractionId.time="afternoon"
+                if (attractionData.price == 2500){
+                    attractionData.time="afternoon"
                 };
                 fetch(`/api/booking`, {
                     method:"POST",
                     credentials:"include",
-                    body:JSON.stringify(attractionId),
+                    body:JSON.stringify(attractionData),
                     cache:"no-cache",
                     headers:new Headers({
                         "content-type":"application/json"
                     })
                 })
-                window.location.href="/booking"
+                .then(function(response){
+                    window.location.href="/booking";
+                })
             }else{
                 showSignIn=document.querySelector(".signIn").style.display="block";
             };

@@ -163,6 +163,9 @@ header{
     margin-top:0px;
     margin-bottom:0px;
 }
+.signOutLi{
+    display:flex;
+}
 @media screen and (max-width:600px){
     .wrapHeader ul li a{
         margin:7.5px;
@@ -568,7 +571,15 @@ footer{
 .scheduled{
     padding:45px 0px 40px 100px;
 }
-.scheduled h4, .contactInformation h4, .paymentInformation h4{
+.sectionScheduled{
+    padding:45px 0px 15px 100px;
+}
+.scheduled h4{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:35px;
+}
+.contactInformation h4, .paymentInformation h4{
     font-size:20px;
     font-weight:bold;
     margin-bottom:24px;
@@ -576,7 +587,7 @@ footer{
 .spotScheduled{
     display:flex;
     justify-content:space-between;
-    font-weight:bold;
+    margin:25px 0px;
 }
 .spotScheduledData{
     display:flex;
@@ -595,14 +606,30 @@ footer{
     height:100%;
     object-fit:cover;
 }
-.spotScheduledData p{
+.textDiv h5 a{
+    font-size:16px;
+    font-weight:bold;
+    color:#448899;
+    text-decoration:none;
+}
+.textDiv h5{
+    margin:10px 0px 30px 0px;
+}
+.textDiv h5 a:hover{
+    color:#387180;
+}
+.spotScheduledDate, .spotScheduledTime, .spotScheduledPrice, .spotScheduledAddress{
     margin-bottom:20px;
+    font-weight:bold;
+}
+.spotScheduledDate span, .spotScheduledTime span, .spotScheduledPrice span, .spotScheduledAddress span{
+    font-weight:normal;
 }
 .spotScheduled .iconDelete{
     color:#666666;
     font-size:20px;
     padding:0px 10px;
-    margin-right:100px;
+    margin:10px 100px 0px 0px;
 }
 .spotScheduled .iconDelete:hover{
     color:#448899;
@@ -644,4 +671,8 @@ footer{
 }
 .wrapBooking .bookingPrice button:hover{
     background-color:#387180;
+}
+.noScheduled{
+    font-size:16px;
+    color:#666666;
 }
