@@ -202,6 +202,14 @@ def apiBooking():
 		session["spotScheduled"]=[]
 		return jsonify(replyMessage), 200
 
+@app.route("/api/order/<orderNumber>", methods=["GET"])
+def apiOrder(orderNumber):
+	return "World"
+
+@app.route("/api/orders", methods=["POST"])
+def apiOrders():
+	return "Hello"
+
 @app.route("/api/user", methods=["GET", "POST", "PATCH", "DELETE"])
 def apiUser():
 	sqlSearchResult={}
