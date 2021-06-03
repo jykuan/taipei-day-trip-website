@@ -149,7 +149,7 @@ header{
     align-items:center;
 }
 .wrapHeader ul li a{
-    margin:10px;
+    margin:0px 10px;
     font-size:16px;
     color:#666666;
     text-decoration:none;
