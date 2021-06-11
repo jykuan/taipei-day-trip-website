@@ -101,7 +101,13 @@
     </div>
     <script type="text/javascript">
         // HomePage Onload
-        // console.log(typeof(location.pathname))
+        // console.log(location.pathname)
+        var locationUrl=location.pathname
+        window.history.forward(1);
+        history.pushState(null, null, document.locationUrl);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.locationUrl);
+        });
         var userId;
         var spotTripPrice=2000;
         var spot=new XMLHttpRequest();
@@ -312,15 +318,8 @@
             fetch(`/api/user`,{
                 method:"DELETE"
             })
-            .then(function(response){
-                response.json().then(function(data){
-                    if (data.ok == true){
-                        showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
-                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
-                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
-                        showHeaderUsername=document.querySelector(".headerUsername").style.display="none";
-                    };
-                })
+            .then(function(){
+                window.location.reload();
             })
         };
 
@@ -336,6 +335,10 @@
                     date:selectDate.value,
                     price:spotTripPrice,
                     time:"morning"
+                };
+                if (attractionData.date == ""){
+                    alert("日期不可為空白")
+                    return
                 };
                 if (attractionData.price == 2500){
                     attractionData.time="afternoon"

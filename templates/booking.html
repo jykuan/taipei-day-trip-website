@@ -106,8 +106,12 @@
     </div>
     <script type="text/javascript">
         // HomePage Onload
-        // console.log(typeof(location.pathname))
-        // var spotImageData;
+        var locationUrl=location.pathname
+        window.history.forward(1);
+        history.pushState(null, null, document.locationUrl);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.locationUrl);
+        });
         var tripPrice=0;
         var spot=new XMLHttpRequest();
         spot.open("GET","/api/booking",true);
@@ -221,16 +225,8 @@
             fetch(`/api/user`,{
                 method:"DELETE"
             })
-            .then(function(response){
-                response.json().then(function(data){
-                    if (data.ok == true){
-                        showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
-                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
-                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
-                        showHeaderUsername=document.querySelector(".headerUsername").style.display="none";
-                    };
-                    window.location.href="/"
-                })
+            .then(function(){
+                window.location.href="/"
             })
         };
 
@@ -335,7 +331,6 @@
             // event.preventDefault()
             // 取得 TapPay Fields 的 status
             const tappayStatus = TPDirect.card.getTappayFieldsStatus()
-            // console.log(tappayStatus)
 
             // 確認是否可以 getPrime
             if (tappayStatus.canGetPrime === false) {
