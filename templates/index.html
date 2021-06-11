@@ -13,7 +13,7 @@
 <body>
     <header>
         <div class="wrap wrapHeader">
-            <h1><a href="#">台北一日遊</a></h1>
+            <h1><a href="http://54.178.32.137:3000/">台北一日遊</a></h1>
             <ul>
                 <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
@@ -91,7 +91,6 @@
             })
             .then(function(response){
                 response.json().then(function(data){
-                    console.log(data)
                     if (data.data != null){
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
@@ -117,7 +116,7 @@
                 var spotTextName=document.createElement("a");
                 spotTextName.textContent=spotTexts;
                 spotTextName.setAttribute("href", "/attraction/"+spotData.data[displayQuantity].id);
-                spotTextName.setAttribute("title", spotData.data.name);
+                spotTextName.setAttribute("title", spotData.data[displayQuantity].name);
 
                 spotImageText.appendChild(spotTextName);
 

@@ -70,7 +70,8 @@ img{
 .pure-form input[type="tel"],
 .pure-form input[type="color"],
 .pure-form select,
-.pure-form textarea {
+.pure-form textarea,
+#card-number, #card-expiration-date, #card-ccv{
     padding:0.5em 0.6em;
     display:inline-block;
     border:1px solid #ccc;
@@ -166,11 +167,13 @@ header{
 .signOutLi{
     display:flex;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .wrapHeader ul li a{
         margin:7.5px;
     }
 }
+@media (max-width:414px){}
+@media (max-width:375px){}
 .banner{
     background:linear-gradient(#AADDEE, #66AABB);
 }
@@ -240,7 +243,7 @@ header{
 .buttonSearch:focus{
     background-color:orange;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .wrapBanner{
         flex-direction:column;
         padding:65px 20px 0px 20px;
@@ -315,7 +318,7 @@ header{
 .wrapSpotContent reply{
     margin-bottom:30px;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .wrapSpotContent spotImageText{
         margin:0px 15px 15px 15px;
         width:100%;
@@ -429,7 +432,7 @@ footer{
 .borderLine{
     border:1px solid #e8e8e8;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .imageDate{
         flex-wrap:wrap;
         padding-left:0px;
@@ -472,7 +475,7 @@ footer{
 .textDate .date .pure-button:hover{
     background-color:#387180;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .textDesAdd{
         padding-left:20px;
         padding-right:20px;
@@ -558,7 +561,7 @@ footer{
     font-size:14px;
     margin-top:15px;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .signIn, .register{
         z-index:12;
     }
@@ -639,8 +642,9 @@ footer{
     font-size:16px;
     font-weight:bold;
 }
-#contactName, #contactEmail, #paymentCard, #paymentTime{
+#contactName, #contactEmail, #paymentCard{
     margin-bottom:15px;
+    padding:10px;
 }
 .contactInformation p{
     margin-top:20px;
@@ -674,7 +678,34 @@ footer{
     color:#666666;
     margin-bottom:25px;
 }
-@media screen and (max-width:600px){
+.tapPayInformation .tapPaySection{
+    display:flex;
+    align-items:center;
+}
+.tapPayTitle{
+    margin-right:5.5px;
+}
+#card-number, #card-expiration-date, #card-ccv{
+    display:inline-block;
+    margin-bottom:15px;
+}
+.tapPayInformation label{
+    display:block;
+}
+.tpfield{
+    height:40px;
+    width:300px;
+    border:1px solid gray;
+    margin:5px 0px;
+    padding:5px;
+}
+.tappay-field-focus{
+    border-color:#66afe9;
+    outline:0;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+@media screen and (max-width:768px){
     .wrapBooking{
         padding-left:10px;
         padding-right:10px;
@@ -707,4 +738,50 @@ footer{
     .wrapBooking .bookingPrice{
         padding-right:0px;
     }
+}
+
+/* thankyou.html */
+.thankText{
+    color:rgb(65, 54, 54);
+    /* background-color:#b5d7e2; */
+    /* background-color:rgba(181, 215, 226, 0.5); */
+    /* background:linear-gradient(#AADDEE, #66AABB); */
+    background-color:rgba(170, 221, 238, 0.5);
+    display:flex;
+    justify-content:center;
+    padding-top:120px;
+    padding-bottom:120px;
+}
+.thankText .framwork{
+    padding:30px 75px;
+    text-align:center;
+    display:inline-block;
+    background-color:white;
+    border-radius:5px;
+    box-shadow:0px 5px 20px rgb(210, 210, 210);
+}
+.thankText .framwork h3{
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#387180;
+    padding:0px 0px 30px 0px;
+}
+.thankText .framwork p{
+    margin:10px 0px 40px 0px;
+}
+.orderNumber{
+    color:rgb(211, 86, 103);
+}
+.thankText .framwork a{
+    display:block;
+    width:100%;
+    text-decoration:none;
+    color:#FFFFFF;
+    background-color:#448899;
+    padding:10px;
+    border-radius:5px;
+}
+.thankText .framwork a:hover{
+    background-color:#387180;
 }

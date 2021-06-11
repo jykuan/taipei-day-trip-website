@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, render_template, session, url_for, jsonify, make_response, Response
-# import json
+import json
+import urllib.request as req
 # from flask_cors import CORS
+import time
 import os
 import string
 import mysql.connector
@@ -195,7 +197,7 @@ def apiBooking():
 			replyMessage["message"]="未登入系統"
 			return jsonify(replyMessage), 403
 	if request.method == "GET":
-		username=session.get("username")
+		# username=session.get("username")
 		return jsonify(session["spotScheduled"]), 200
 	if request.method == "DELETE":
 		replyMessage["ok"]=True
@@ -208,7 +210,55 @@ def apiOrder(orderNumber):
 
 @app.route("/api/orders", methods=["POST"])
 def apiOrders():
-	return "Hello"
+	replyMessage={}
+	if session["username"] != "":
+		orderInformation=request.get_json()
+		if orderInformation["prime"] != "" and orderInformation["order"] != "":
+			orderInformation["order"]["trip"]=session["spotScheduled"]
+			replyMessage={"data":{
+				"number":str(round(time.time())),
+				"payment":{
+					"status":False,
+					"message":"未付款"
+				}
+			}}
+			orderData={
+				"prime":orderInformation["prime"],
+				"partner_key": "partner_2t1bM4mdlh58dF9DO8EIrD6gjcuJGidqvEr2BvW5NgNxU41o2DLMptE4",
+				"merchant_id":"jamie871225_CTBC",
+				"details":"TapPay",
+				"amount":orderInformation["order"]["price"],
+				"order_number":replyMessage["data"]["number"],
+				"cardholder": {
+					"name":orderInformation["order"]["contact"]["name"],
+					"email":orderInformation["order"]["contact"]["email"],
+					"phone_number":orderInformation["order"]["contact"]["phone"],
+				}
+			}
+			url="https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime"
+			tappayRequest=req.Request(url, headers={
+				"Content-Type":"application/json",
+				"x-api-key":"partner_2t1bM4mdlh58dF9DO8EIrD6gjcuJGidqvEr2BvW5NgNxU41o2DLMptE4"
+			}, data=json.dumps(orderData).encode("utf-8"))
+			with req.urlopen(tappayRequest) as response:
+				result=response.read().decode("utf-8")
+			# print(result)
+			if result[10] == "0":
+				replyMessage["data"]["payment"]["status"]=0
+				replyMessage["data"]["payment"]["message"]="付款成功"
+				session["orderNumber"]=replyMessage["data"]["number"]
+				print(session["orderNumber"])
+				return jsonify(replyMessage), 200
+			else:
+				replyMessage["data"]["payment"]["status"]=1
+				replyMessage["data"]["payment"]["message"]="付款失敗"
+				return jsonify(replyMessage), 400
+	else:
+		replyMessage={
+			"error":True,
+			"message":"使用者未登入，拒絕存取"
+		}
+		return jsonify(replyMessage), 403
 
 @app.route("/api/user", methods=["GET", "POST", "PATCH", "DELETE"])
 def apiUser():
@@ -292,7 +342,9 @@ def booking():
 
 @app.route("/thankyou")
 def thankyou():
-	return render_template("thankyou.html")
+	orderNumber=request.args.get("number")
+	session["orderNumber"]
+	return render_template("thankyou.html", orderNumber=orderNumber)
 	
 @app.errorhandler(500)
 def internal_error(error):
