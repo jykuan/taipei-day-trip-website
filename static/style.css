@@ -565,6 +565,9 @@ footer{
     .signIn, .register{
         z-index:12;
     }
+    .headerUsername{
+        display:none;
+    }
 }
 
 /* booking.html */

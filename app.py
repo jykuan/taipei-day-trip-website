@@ -276,7 +276,7 @@ def apiOrders():
 				replyMessage["data"]["payment"]["message"]="聯絡信箱為必填項目"
 				return jsonify(replyMessage), 400
 			if orderInformation["order"]["contact"]["phone"] == "":
-				replyMessage["data"]["payment"]["message"]="聯絡電話為必填項目"
+				replyMessage["data"]["payment"]["message"]="手機號碼為必填項目"
 				return jsonify(replyMessage), 400
 			return jsonify(replyMessage), 400
 	else:
