@@ -257,6 +257,27 @@ def apiOrders():
 		else:
 			replyMessage["data"]["payment"]["status"]=1
 			replyMessage["data"]["payment"]["message"]="付款失敗，請確認填寫資訊是否正確"
+			if orderInformation["order"]["contact"]["name"] == "" and orderInformation["order"]["contact"]["email"] == "" and orderInformation["order"]["contact"]["phone"] == "":
+				replyMessage["data"]["payment"]["message"]="請輸入聯絡資訊"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["name"] == "" and orderInformation["order"]["contact"]["email"] == "":
+				replyMessage["data"]["payment"]["message"]="請輸入聯絡姓名及聯絡信箱"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["email"] == "" and orderInformation["order"]["contact"]["phone"] == "":
+				replyMessage["data"]["payment"]["message"]="請輸入聯絡信箱及手機號碼"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["name"] == "" and orderInformation["order"]["contact"]["phone"] == "":
+				replyMessage["data"]["payment"]["message"]="請輸入聯絡姓名及手機號碼"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["name"] == "":
+				replyMessage["data"]["payment"]["message"]="聯絡姓名為必填項目"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["email"] == "":
+				replyMessage["data"]["payment"]["message"]="聯絡信箱為必填項目"
+				return jsonify(replyMessage), 400
+			if orderInformation["order"]["contact"]["phone"] == "":
+				replyMessage["data"]["payment"]["message"]="聯絡電話為必填項目"
+				return jsonify(replyMessage), 400
 			return jsonify(replyMessage), 400
 	else:
 		replyMessage={
