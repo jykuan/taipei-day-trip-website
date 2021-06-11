@@ -130,6 +130,10 @@
             })
             var spotData=JSON.parse(this.responseText);
             if (spotData.length <= 0){
+                showContactInformation=document.querySelector(".contactInformation").style.display="none";
+                showPaymentInformation=document.querySelector(".paymentInformation").style.display="none";
+                showBorderLine=document.querySelector(".borderLine").style.display="none";
+                showButton=document.querySelector(".pure-button").style.display="none";
                 var noScheduled=document.createElement("p");
                 noScheduled.setAttribute("class", "noScheduled")
                 noScheduled.textContent="目前沒有預定行程";
@@ -335,7 +339,7 @@
 
             // 確認是否可以 getPrime
             if (tappayStatus.canGetPrime === false) {
-                alert('Can not get prime')
+                alert('付款資訊錯誤')
                 return
             }
             // Get prime
@@ -371,7 +375,9 @@
                 .then(function(response){
                     response.json().then(function(data){
                         alert(data.data.payment.message)
-                        window.location.replace("/thankyou?number="+data.data.number)
+                        if (data.data.payment.message == "付款成功"){
+                            window.location.replace("/thankyou?number="+data.data.number)
+                        };
                     })
                 })
                 // alert('get prime 成功，prime: ' + result.card.prime)

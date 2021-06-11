@@ -213,15 +213,15 @@ def apiOrders():
 	replyMessage={}
 	if session["username"] != "":
 		orderInformation=request.get_json()
-		if orderInformation["prime"] != "" and orderInformation["order"] != "":
-			orderInformation["order"]["trip"]=session["spotScheduled"]
-			replyMessage={"data":{
-				"number":str(round(time.time())),
-				"payment":{
-					"status":False,
-					"message":"未付款"
-				}
-			}}
+		orderInformation["order"]["trip"]=session["spotScheduled"]
+		replyMessage={"data":{
+			"number":str(round(time.time())),
+			"payment":{
+				"status":False,
+				"message":"未付款"
+			}
+		}}
+		if orderInformation["prime"] != "" and orderInformation["order"]["trip"] != [] and orderInformation["order"]["contact"]["name"] != "" and orderInformation["order"]["contact"]["email"] != "" and orderInformation["order"]["contact"]["phone"] != "":
 			orderData={
 				"prime":orderInformation["prime"],
 				"partner_key": "partner_2t1bM4mdlh58dF9DO8EIrD6gjcuJGidqvEr2BvW5NgNxU41o2DLMptE4",
@@ -247,12 +247,17 @@ def apiOrders():
 				replyMessage["data"]["payment"]["status"]=0
 				replyMessage["data"]["payment"]["message"]="付款成功"
 				session["orderNumber"]=replyMessage["data"]["number"]
-				print(session["orderNumber"])
+				session["spotScheduled"]=False
+				session["spotScheduled"]=[]
 				return jsonify(replyMessage), 200
 			else:
 				replyMessage["data"]["payment"]["status"]=1
-				replyMessage["data"]["payment"]["message"]="付款失敗"
+				replyMessage["data"]["payment"]["message"]="付款失敗，請確認填寫資訊是否正確"
 				return jsonify(replyMessage), 400
+		else:
+			replyMessage["data"]["payment"]["status"]=1
+			replyMessage["data"]["payment"]["message"]="付款失敗，請確認填寫資訊是否正確"
+			return jsonify(replyMessage), 400
 	else:
 		replyMessage={
 			"error":True,
