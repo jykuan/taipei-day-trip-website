@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,17 +7,18 @@
     <title>台北一日遊</title>
 
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'/>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel="stylesheet" href="http://54.178.32.137:3000/static/style.css">
 </head>
 <body>
     <header>
         <div class="wrap wrapHeader">
-            <h1><a href="#">台北一日遊</a></h1>
+            <h1><a href="http://54.178.32.137:3000/">台北一日遊</a></h1>
             <ul>
-                <li><a href="#">預定行程</a></li>
+                <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
                 <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
-                <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
+                <li class="signOutLi"><span class="headerUsername"></span><a class="headerSignOut" onclick="signOut()">(登出)</a></li>
             </ul>
         </div>
     </header>
@@ -34,7 +34,7 @@
                     <button class="pure-button buttonSearch" onclick="spotNameKeyword()"><i class="fas fa-search search"></i></button>
                 </div>
             </div>
-            <img src="/static/images/welcome 1.png" alt="Welcome">
+            <img src="http://54.178.32.137:3000/static/images/welcome 1.png" alt="Welcome">
         </div>
     </section>
     <section class="spotContent">
@@ -79,6 +79,12 @@
     </div>
     <script type="text/javascript">
         // HomePage Onload
+        var locationUrl=location.pathname
+        window.history.forward(1);
+        history.pushState(null, null, document.locationUrl);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.locationUrl);
+        });
         var spot=new XMLHttpRequest();
         spot.open("GET","/api/attractions",true);
         spot.onload=function(){
@@ -91,11 +97,11 @@
             })
             .then(function(response){
                 response.json().then(function(data){
-                    console.log(data);
                     if (data.data != null){
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        document.getElementsByClassName("headerUsername")[0].textContent=" | "+data.data.name;
                     };
                 })
             })
@@ -116,7 +122,7 @@
                 var spotTextName=document.createElement("a");
                 spotTextName.textContent=spotTexts;
                 spotTextName.setAttribute("href", "/attraction/"+spotData.data[displayQuantity].id);
-                spotTextName.setAttribute("title", spotData.data.name);
+                spotTextName.setAttribute("title", spotData.data[displayQuantity].name);
 
                 spotImageText.appendChild(spotTextName);
 
@@ -243,7 +249,6 @@
 
                                         spotImageText.appendChild(spotTextMrtCat);
                                     };     
-                                    console.log(data.nextPage);
                                 };
                                 resetSpot.send();
                             };
@@ -308,6 +313,25 @@
         }, options);
         observer.observe(spotFooter);
 
+        // HeaderScheduled Onclick
+        function headerScheduled(){
+            fetch(`/api/user`,{
+                method:"GET"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    if (data.data != null){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        window.location.href="/booking"
+                    }else{
+                        showSignIn=document.querySelector(".signIn").style.display="block";
+                    }
+                })
+            })
+        };
+
         // SignIn Onclick、Register Onclick
         var showSignIn;
         function signIn(){
@@ -368,12 +392,10 @@
             .then(function(response){
                 if (response.status !== 200){
                     console.log("Response status was not 200");
-                    console.log("Hello")
                     showSignInError=document.querySelector(".signInStatus").style.display="block";
                     return ;
                 };
                 response.json().then(function(data){
-                    // console.log(data);
                     window.location.replace(location.href);
                 })
             })
@@ -415,15 +437,8 @@
             fetch(`/api/user`,{
                 method:"DELETE"
             })
-            .then(function(response){
-                response.json().then(function(data){
-                    console.log(data);
-                    if (data.ok == true){
-                        showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
-                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
-                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
-                    };
-                })
+            .then(function(){
+                location.reload();
             })
         };
     </script>

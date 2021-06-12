@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台北一日遊</title>
+
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'/>
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel="stylesheet" href="http://54.178.32.137:3000/static/style.css">
+    <script src="https://js.tappaysdk.com/tpdirect/v5.7.0"></script>
+    <script>
+        TPDirect.setupSDK(20506, 'app_0yT7tXHgRHTqrMGo5LuGfKmiF7G4gEtsvRMtf6OoicA4lxBJhIC5qgP28D1q', 'sandbox')
+    </script>
+</head>
+<body>
+    <header>
+        <div class="wrap wrapHeader">
+            <h1><a href="/">台北一日遊</a></h1>
+            <ul>
+                <li><a href="#">預定行程</a></li>
+                <li><a class="headerRegister" onclick="register()">註冊</a></li>
+                <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
+                <li class="signOutLi"><span class="headerUsername"></span><a class="headerSignOut" onclick="signOut()">(登出)</a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="wrap wrapBooking">
+        <section class="scheduled sectionScheduled">
+            <h4>您好 <span class="username"></span>，待預定的行程如下：</h4>
+        </section>
+        <hr class="borderLine">
+        <section class="contactInformation">
+            <h4>您的聯絡資訊</h4>
+            <div action="" class="pure-form">
+                <label for="contactName">聯絡姓名：</label>
+                <input type="text" name="contactName" id="contactName" placeholder="Jamie Kuan">
+                <br>
+                <label for="contactEmail">聯絡信箱：</label>
+                <input type="email" name="contactEmail" id="contactEmail" placeholder="taipei2021@gmail.com">
+                <br>
+                <label for="contactPhone">手機號碼：</label>
+                <input type="tel" name="contactPhone" id="contactPhone" placeholder="0987654321">
+            </div>
+            <p>請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</p>
+        </section>
+        <hr class="borderLine">
+        <section class="paymentInformation">
+            <h4>信用卡付款資訊</h4>
+            <div class="pure-form tapPayInformation">
+                <div class="tapPaySection">
+                    <label class="tapPayTitle" for="card-number">卡片號碼：</label>
+                    <div class="tpfield" id="card-number"></div>
+                </div>
+                <div class="tapPaySection">
+                    <label class="tapPayTitle" for="card-expiration-date">過期時間：</label>
+                    <div class="tpfield" id="card-expiration-date"></div>
+                </div>
+                <div class="tapPaySection">
+                    <label class="tapPayTitle" for="card-ccv">驗證密碼：</label>
+                    <div class="tpfield" id="card-ccv"></div>
+                </div>
+            </div>
+        </section>
+        <hr class="borderLine">
+        <section class="bookingPrice">
+            <h5>總價：新台幣 <span class="tripPrice">0</span> 元</h5>
+            <button class="pure-button" onclick="onSubmit()">確認訂購並付款</button>
+        </section>
+    </div>
+    <footer class="spotFooter">
+        <h3>COPYRIGHT <i class="far fa-copyright"></i> 2021 台北一日遊</h3>
+    </footer>
+    <div class="signIn">
+        <div class="signInColorBar"></div>
+        <h2>登入會員帳號</h2>
+        <button class="signInClose" onclick="signInClose()">X</button>
+        <form class="pure-form signInForm" action="/api/user" method="PATCH">
+            <input type="email" name="signInEmail" id="signInEmail" placeholder="輸入電子信箱">
+            <input type="password" name="signInPassword" id="signInPassword" placeholder="輸入密碼">
+            <submit class="pure-button signInButton" onclick="signInStatus()">登入帳戶</submit>
+        </form>
+        <div class="signInRegister">
+            <p>還沒有帳戶？</p>
+            <h3><a onclick="switchRegister()">點此註冊</a></h3>
+        </div>
+        <p class="signInStatus">- 信箱或密碼錯誤 -</p>
+    </div>
+    <div class="register">
+        <div class="registerColorBar"></div>
+        <h2>註冊會員帳號</h2>
+        <button class="registerClose" onclick="registerClose()">X</button>
+        <form class="pure-form registerForm" action="/api/user" method="POST">
+            <input type="text" name="registerName" id="registerName" placeholder="輸入姓名">
+            <input type="email" name="registerEmail" id="registerEmail" placeholder="輸入電子信箱">
+            <input type="password" name="registerPassword" id="registerPassword" placeholder="輸入密碼">
+            <submit class="pure-button registerButton" onclick="registerStatus()">註冊新帳戶</submit>
+        </form>
+        <div class="registerSignIn">
+            <p>已經有帳戶了？</p>
+            <h3><a onclick="switchSignIn()">點此登入</a></h3>
+        </div>
+        <p class="registerStatus">- 格式錯誤或信箱已被註冊 -</p>
+        <p class="registerSuccess">- 註冊成功 -</p>
+    </div>
+    <script type="text/javascript">
+        // HomePage Onload
+        var locationUrl=location.pathname
+        window.history.forward(1);
+        history.pushState(null, null, document.locationUrl);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.locationUrl);
+        });
+        var tripPrice=0;
+        var spot=new XMLHttpRequest();
+        spot.open("GET","/api/booking",true);
+        spot.onload=function(){
+            fetch(`/api/user`,{
+                method:"GET"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    if (data.data != null){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        document.getElementsByClassName("username")[0].textContent=data.data.name;
+                        document.getElementsByClassName("headerUsername")[0].textContent=" | "+data.data.name;
+                    }else{
+                        window.location.replace("/")
+                    };
+                })
+            })
+            var spotData=JSON.parse(this.responseText);
+            if (spotData.length <= 0){
+                showContactInformation=document.querySelector(".contactInformation").style.display="none";
+                showPaymentInformation=document.querySelector(".paymentInformation").style.display="none";
+                showBorderLine=document.querySelector(".borderLine").style.display="none";
+                showButton=document.querySelector(".pure-button").style.display="none";
+                var noScheduled=document.createElement("p");
+                noScheduled.setAttribute("class", "noScheduled")
+                noScheduled.textContent="目前沒有預定行程";
+                document.getElementsByClassName("scheduled")[0].appendChild(noScheduled);
+            };
+            for (var scheduledQuantity=0;scheduledQuantity < spotData.length;scheduledQuantity++){
+                var spotScheduled=document.createElement("div");
+                spotScheduled.setAttribute("class", "spotScheduled");
+                var spotScheduledData=document.createElement("div");
+                spotScheduledData.setAttribute("class", "spotScheduledData")
+                document.getElementsByClassName("scheduled")[0].appendChild(spotScheduled).appendChild(spotScheduledData);
+
+                // iconTrash
+                var iconTrash=document.createElement("i");
+                iconTrash.setAttribute("class", "fas fa-trash-alt iconDelete"+" iconTrash"+scheduledQuantity);
+                iconTrash.setAttribute("onclick", "deleteSpotData()");
+                document.getElementsByClassName("spotScheduled")[scheduledQuantity].appendChild(iconTrash);
+
+                // spotImage
+                var spotImageSection=document.createElement("figure");
+                var spotImage=document.createElement("img");
+                spotImage.setAttribute("src", spotData[scheduledQuantity].attraction.image);
+                document.getElementsByClassName("spotScheduledData")[scheduledQuantity].appendChild(spotImageSection).appendChild(spotImage);
+
+                // spotText
+                var textDiv=document.createElement("div");
+                textDiv.setAttribute("class", "textDiv");
+                var textTitle=document.createElement("h5");
+                var textTitleA=document.createElement("a");
+                textTitleA.textContent="台北一日遊："+spotData[scheduledQuantity].attraction.name;
+                textTitleA.setAttribute("href", "/attraction/"+spotData[scheduledQuantity].attraction.id);
+                textTitleA.setAttribute("title", spotData[scheduledQuantity].attraction.name)
+                document.getElementsByClassName("spotScheduledData")[scheduledQuantity].appendChild(textDiv).appendChild(textTitle).appendChild(textTitleA);
+
+                var spotScheduledDate=document.createElement("p");
+                spotScheduledDate.setAttribute("class", "spotScheduledDate");
+                spotScheduledDate.textContent="日期：";
+                var dateSpan=document.createElement("span");
+                dateSpan.textContent=spotData[scheduledQuantity].date;
+                document.getElementsByClassName("textDiv")[scheduledQuantity].appendChild(spotScheduledDate).appendChild(dateSpan);
+
+                var spotScheduledTime=document.createElement("p");
+                spotScheduledTime.setAttribute("class", "spotScheduledTime");
+                spotScheduledTime.textContent="時間：";
+                var timeSpan=document.createElement("span");
+                if (spotData[scheduledQuantity].time == "morning"){
+                    var displayTime="早上 9 點到下午 4 點";
+                }else{
+                    var displayTime="下午 2 點到晚上 9 點";
+                };
+                timeSpan.textContent=displayTime;
+                document.getElementsByClassName("textDiv")[scheduledQuantity].appendChild(spotScheduledTime).appendChild(timeSpan);
+
+                var spotScheduledPrice=document.createElement("p");
+                spotScheduledPrice.setAttribute("class", "spotScheduledPrice");
+                spotScheduledPrice.textContent="費用：";
+                var priceSpan=document.createElement("span");
+                priceSpan.textContent="新台幣 "+spotData[scheduledQuantity].price+" 元";
+                document.getElementsByClassName("textDiv")[scheduledQuantity].appendChild(spotScheduledPrice).appendChild(priceSpan);
+                tripPrice+=spotData[scheduledQuantity].price;
+
+                var spotScheduledAddress=document.createElement("p");
+                spotScheduledAddress.setAttribute("class", "spotScheduledAddress");
+                spotScheduledAddress.textContent="地點：";
+                var addressSpan=document.createElement("span");
+                addressSpan.textContent=spotData[scheduledQuantity].attraction.address;
+                document.getElementsByClassName("textDiv")[scheduledQuantity].appendChild(spotScheduledAddress).appendChild(addressSpan);
+            };
+            document.getElementsByClassName("tripPrice")[0].textContent=tripPrice;
+        };
+        spot.send();
+
+        // DeleteSpotData Onclick
+        function deleteSpotData(){
+            fetch(`/api/booking`,{
+                method:"DELETE"
+            })
+            .then(function(response){
+                window.location.href="/booking"
+            })
+        };
+        
+        // SignOut Onclick
+        function signOut(){
+            fetch(`/api/user`,{
+                method:"DELETE"
+            })
+            .then(function(){
+                window.location.href="/"
+            })
+        };
+
+        // TapPay
+        var fields = {
+            number: {
+                // css selector
+                element: '#card-number',
+                placeholder: '**** **** **** ****'
+            },
+            expirationDate: {
+                // DOM object
+                element: document.getElementById('card-expiration-date'),
+                placeholder: 'MM / YY'
+            },
+            ccv: {
+                element: '#card-ccv',
+                placeholder: '安全碼'
+            }
+        }
+        TPDirect.card.setup({
+            fields: fields,
+            styles: {
+                // Style all elements
+                'input': {
+                    'color': 'gray'
+                },
+                // Styling ccv field
+                'input.ccv': {
+                    'font-size': '16px'
+                },
+                // Styling expiration-date field
+                'input.expiration-date': {
+                    'font-size': '16px'
+                },
+                // Styling card-number field
+                'input.card-number': {
+                    'font-size': '16px'
+                },
+                // style focus state
+                ':focus': {
+                    // 'color': 'black'
+                },
+                // style valid state
+                '.valid': {
+                    'color': 'green'
+                },
+                // style invalid state
+                '.invalid': {
+                    'color': 'red'
+                },
+                // Media queries
+                // Note that these apply to the iframe, not the root window.
+                '@media screen and (max-width: 400px)': {
+                    'input': {
+                        'color': 'orange'
+                    }
+                }
+            }
+        })
+        TPDirect.card.onUpdate(function (update) {
+            // update.canGetPrime === true
+            // --> you can call TPDirect.card.getPrime()
+            if (update.canGetPrime) {
+                // Enable submit Button to get prime.
+                // submitButton.removeAttribute('disabled')
+            } else {
+                // Disable submit Button to get prime.
+                // submitButton.setAttribute('disabled', true)
+            }                       
+            // cardTypes = ['mastercard', 'visa', 'jcb', 'amex', 'unknown']
+            if (update.cardType === 'visa') {
+                // Handle card type visa.
+            }
+            // number 欄位是錯誤的
+            if (update.status.number === 2) {
+                // setNumberFormGroupToError()
+            } else if (update.status.number === 0) {
+                // setNumberFormGroupToSuccess()
+            } else {
+                // setNumberFormGroupToNormal()
+            }            
+            if (update.status.expiry === 2) {
+                // setNumberFormGroupToError()
+            } else if (update.status.expiry === 0) {
+                // setNumberFormGroupToSuccess()
+            } else {
+                // setNumberFormGroupToNormal()
+            }            
+            if (update.status.ccv === 2) {
+                // setNumberFormGroupToError()
+            } else if (update.status.ccv === 0) {
+                // setNumberFormGroupToSuccess()
+            } else {
+                // setNumberFormGroupToNormal()
+            }
+        })
+        // call TPDirect.card.getPrime when user submit form to get tappay prime
+        // $('form').on('submit', onSubmit)
+        function onSubmit(event) {
+            var primeValue=0;
+            // event.preventDefault()
+            // 取得 TapPay Fields 的 status
+            const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+
+            // 確認是否可以 getPrime
+            if (tappayStatus.canGetPrime === false) {
+                alert('請確認資訊是否填寫正確')
+                return
+            }
+            // Get prime
+            TPDirect.card.getPrime((result) => {
+                if (result.status !== 0) {
+                    alert('Get prime error ' + result.msg)
+                    return
+                }
+                var contactName=document.getElementById("contactName");
+                var contactEmail=document.getElementById("contactEmail");
+                var contactPhone=document.getElementById("contactPhone");
+                var orderInformation={
+                    prime:result.card.prime,
+                    order:{
+                        price:tripPrice,
+                        trip:[],
+                        contact:{
+                            name:contactName.value,
+                            email:contactEmail.value,
+                            phone:contactPhone.value
+                        }
+                    }
+                };
+                fetch(`/api/orders`, {
+                    method:"POST",
+                    credentials:"include",
+                    body:JSON.stringify(orderInformation),
+                    cache:"no-cache",
+                    headers:new Headers({
+                        "content-type":"application/json"
+                    })
+                })
+                .then(function(response){
+                    response.json().then(function(data){
+                        alert(data.data.payment.message)
+                        if (data.data.payment.message == "付款成功"){
+                            window.location.replace("/thankyou?number="+data.data.number)
+                        };
+                    })
+                })
+                // alert('get prime 成功，prime: ' + result.card.prime)
+                // send prime to your server, to pay with Pay by Prime API .
+                // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+            })
+        }
+    </script>
+</body>
+</html>

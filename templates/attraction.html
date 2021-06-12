@@ -7,51 +7,52 @@
     <title>台北一日遊</title>
 
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'/>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- <link rel="stylesheet" href="/static/style.css"> -->
+    <link rel="stylesheet" href="http://54.178.32.137:3000/static/style.css">
 </head>
 <body>
     <header>
         <div class="wrap wrapHeader">
             <h1><a href="/">台北一日遊</a></h1>
             <ul>
-                <li><a href="#">預定行程</a></li>
+                <li><a onclick="headerScheduled()">預定行程</a></li>
                 <li><a class="headerRegister" onclick="register()">註冊</a></li>
                 <li><a class="headerSignIn" onclick="signIn()">登入</a></li>
-                <li><a class="headerSignOut" onclick="signOut()">登出</a></li>
+                <li class="signOutLi"><span class="headerUsername"></span><a class="headerSignOut" onclick="signOut()">(登出)</a></li>
             </ul>
         </div>
     </header>
-    <section class="image-date">
-        <div class="wrap wrapImageDate">
+    <div class="wrap">
+        <section class="imageDate">
             <figure class="spotImage">
                 <i class="fas fa-arrow-circle-left arrowLeft" onclick="arrowLeft()"></i>
                 <i class="fas fa-arrow-circle-right arrowRight" onclick="arrowRight()"></i>
-                <img src="" alt="spotImage" class="spotImg">
+                <img src="" alt="SpotImage" class="spotImg">
             </figure>
             <div class="textDate">
                 <div class="text"></div>
-                <div class="date">
+                <form class="date" action="/api/booking" method="POST">
                     <h2>訂購導覽行程</h2>
                     <p>以此景點為中心的一日行程，帶您探索城市角落故事</p>
                     <div class="sectionSelectDate pure-form">
                         <label for="selectDate" class="labelDate">選擇日期：</label>
-                        <input type="date" name="selectDate" id="selectDate">
+                        <input type="date" name="selectDate" id="selectDate" placeholder="YYYY-MM-DD">
                     </div>
                     <div class="selectTimeRadio">
                         <p class="labelTime">選擇時間：</p>
-                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="selectFirstHalfDay" checked="checked" onclick="selectFirstHalfDay()">
-                        <label for="selectFirstHalfDay" onclick="selectFirstHalfDay()">上半天</label>
-                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="selectSecondHalfDay" onclick="selectSecondHalfDay()">
-                        <label for="selectSecondHalfDay" onclick="selectSecondHalfDay()">下半天</label>
+                        <input type="radio" name="selectHalfDay" id="selectFirstHalfDay" value="morning" checked="checked" onclick="firstHalfDay()">
+                        <label for="selectFirstHalfDay" onclick="firstHalfDay()">上半天</label>
+                        <input type="radio" name="selectHalfDay" id="selectSecondHalfDay" value="afternoon" onclick="secondHalfDay()">
+                        <label for="selectSecondHalfDay" onclick="secondHalfDay()">下半天</label>
                     </div>
-                    <h3>導覽費用：<span class="selectPrice">新台幣 2000 元</span></h3>
-                    <button class="pure-button">開始預定行程</button>
-                </div>
+                    <h3>導覽費用：新台幣 <span class="selectPrice">2000</span> 元</h3>
+                    <submit class="pure-button" onclick="spotScheduled()">開始預定行程</submit>
+                    <!-- <button class="pure-button" onclick="spotScheduled()">開始預定行程</button> -->
+                </form>
             </div>
-        </div>
-    </section>
-    <section class="text">
-        <div class="wrap wrapSpotData">
+        </section>
+        <hr class="borderLine">
+        <section class="textDesAdd">
             <div class="description"></div>
             <div class="address">
                 <h4>景點地址：</h4>
@@ -59,8 +60,8 @@
             <div class="transport">
                 <h4>交通方式：</h4>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
     <footer class="spotFooter">
         <h3>COPYRIGHT <i class="far fa-copyright"></i> 2021 台北一日遊</h3>
     </footer>
@@ -99,23 +100,30 @@
         <p class="registerSuccess">- 註冊成功 -</p>
     </div>
     <script type="text/javascript">
-        // HomePage Onloadvar 
-        // console.log(typeof(location.pathname))
-        var spotImageData;
+        // HomePage Onload
+        // console.log(location.pathname)
+        var locationUrl=location.pathname
+        window.history.forward(1);
+        history.pushState(null, null, document.locationUrl);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.locationUrl);
+        });
+        var userId;
+        var spotTripPrice=2000;
         var spot=new XMLHttpRequest();
         spot.open("GET","/api"+String(location.pathname),true);
-
         spot.onload=function(){
             fetch(`/api/user`,{
                 method:"GET"
             })
             .then(function(response){
                 response.json().then(function(data){
-                    console.log(data);
                     if (data.data != null){
+                        userId=data;
                         showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
                         showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
                         showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        document.getElementsByClassName("headerUsername")[0].textContent=" | "+data.data.name;
                     };
                 })
             })
@@ -124,7 +132,6 @@
             // spotImage
             document.getElementsByClassName("spotImg")[0].setAttribute("src", spotData.data.images[0]);
             spotImageData=spotData.data.images;
-            console.log(spotImageData);
 
             // spotTextName
             var spotTexts=spotData.data.name;
@@ -152,19 +159,21 @@
         };
         spot.send();
 
-        // SelectFirstHalfDay Onclick
-        function selectFirstHalfDay(){
+        // FirstHalfDay Onclick
+        function firstHalfDay(){
+            spotTripPrice=2000
             document.getElementsByClassName("selectPrice")[0].innerHTML="";
             var selectFirstHalfDay=document.createElement("selectFirstHalfDay");
-            selectFirstHalfDay.textContent="新台幣 2000 元";
+            selectFirstHalfDay.textContent="2000";
             document.getElementsByClassName("selectPrice")[0].appendChild(selectFirstHalfDay);
         };
 
-        // SelectSecondHalfDay Onclick
-        function selectSecondHalfDay(){
+        // SecondHalfDay Onclick
+        function secondHalfDay(){
+            spotTripPrice=2500
             document.getElementsByClassName("selectPrice")[0].innerHTML="";
             var selectSecondHalfDay=document.createElement("selectSecondHalfDay");
-            selectSecondHalfDay.textContent="新台幣 2500 元";
+            selectSecondHalfDay.textContent="2500";
             document.getElementsByClassName("selectPrice")[0].appendChild(selectSecondHalfDay);
         };
 
@@ -175,7 +184,6 @@
                 imgSequence+=spotImageData.length;
             };
             document.getElementsByClassName("spotImg")[0].innerHTML="";
-            console.log(spotImageData[imgSequence]);
             document.getElementsByClassName("spotImg")[0].setAttribute("src", spotImageData[--imgSequence]);
         };
 
@@ -186,6 +194,25 @@
             };
             document.getElementsByClassName("spotImg")[0].innerHTML="";
             document.getElementsByClassName("spotImg")[0].setAttribute("src", spotImageData[imgSequence++]);
+        };
+
+        // HeaderScheduled Onclick
+        function headerScheduled(){
+            fetch(`/api/user`,{
+                method:"GET"
+            })
+            .then(function(response){
+                response.json().then(function(data){
+                    if (data.data != null){
+                        showHeaderRegister=document.querySelector(".headerRegister").style.display="none";
+                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="none";
+                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="block";
+                        window.location.href="/booking"
+                    }else{
+                        showSignIn=document.querySelector(".signIn").style.display="block";
+                    }
+                })
+            })
         };
 
         // SignIn Onclick、Register Onclick
@@ -246,12 +273,10 @@
             .then(function(response){
                 if (response.status !== 200){
                     console.log("Response status was not 200");
-                    console.log("Hello")
                     showSignInError=document.querySelector(".signInStatus").style.display="block";
                     return ;
                 };
                 response.json().then(function(data){
-                    // console.log(data);
                     window.location.replace(location.href);
                 })
             })
@@ -287,22 +312,52 @@
                 })
             })
         };
-
+        
         // SignOut Onclick
         function signOut(){
             fetch(`/api/user`,{
                 method:"DELETE"
             })
-            .then(function(response){
-                response.json().then(function(data){
-                    console.log(data);
-                    if (data.ok == true){
-                        showHeaderRegister=document.querySelector(".headerRegister").style.display="block";
-                        showHeaderSignIn=document.querySelector(".headerSignIn").style.display="block";
-                        showHeaderSignOut=document.querySelector(".headerSignOut").style.display="none";
-                    };
-                })
+            .then(function(){
+                window.location.reload();
             })
+        };
+
+        // SpotScheduled Onclick
+        function spotScheduled(){
+            var testTest={};
+            if (userId != undefined){
+                var attractionApi=String(location.pathname)
+                var attractionNumber=attractionApi.split("/")
+                var selectDate=document.getElementById("selectDate")
+                var attractionData={
+                    attraction:Number(attractionNumber[2]),
+                    date:selectDate.value,
+                    price:spotTripPrice,
+                    time:"morning"
+                };
+                if (attractionData.date == ""){
+                    alert("日期不可為空白")
+                    return
+                };
+                if (attractionData.price == 2500){
+                    attractionData.time="afternoon"
+                };
+                fetch(`/api/booking`, {
+                    method:"POST",
+                    credentials:"include",
+                    body:JSON.stringify(attractionData),
+                    cache:"no-cache",
+                    headers:new Headers({
+                        "content-type":"application/json"
+                    })
+                })
+                .then(function(response){
+                    window.location.href="/booking";
+                })
+            }else{
+                showSignIn=document.querySelector(".signIn").style.display="block";
+            };
         };
     </script>
 </body>

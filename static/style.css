@@ -70,16 +70,17 @@ img{
 .pure-form input[type="tel"],
 .pure-form input[type="color"],
 .pure-form select,
-.pure-form textarea {
+.pure-form textarea,
+#card-number, #card-expiration-date, #card-ccv{
     padding:0.5em 0.6em;
-    display:block;
+    display:inline-block;
     border:1px solid #ccc;
     box-shadow:inset 0 1px 3px #ddd;
     border-radius:4px;
     -webkit-box-sizing:border-box;
     -moz-box-sizing:border-box;
     box-sizing:border-box;
-    width:100%;
+    width:200px;
     font-size:16px;
 }
 
@@ -133,7 +134,7 @@ header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px 0px;
+    padding:12px 0px;
 }
 .wrapHeader h1 a{
     display:block;
@@ -149,7 +150,7 @@ header{
     align-items:center;
 }
 .wrapHeader ul li a{
-    margin:10px;
+    margin:0px 10px;
     font-size:16px;
     color:#666666;
     text-decoration:none;
@@ -163,11 +164,16 @@ header{
     margin-top:0px;
     margin-bottom:0px;
 }
-@media screen and (max-width:600px){
+.signOutLi{
+    display:flex;
+}
+@media screen and (max-width:768px){
     .wrapHeader ul li a{
         margin:7.5px;
     }
 }
+@media (max-width:414px){}
+@media (max-width:375px){}
 .banner{
     background:linear-gradient(#AADDEE, #66AABB);
 }
@@ -237,7 +243,7 @@ header{
 .buttonSearch:focus{
     background-color:orange;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .wrapBanner{
         flex-direction:column;
         padding:65px 20px 0px 20px;
@@ -312,7 +318,7 @@ header{
 .wrapSpotContent reply{
     margin-bottom:30px;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .wrapSpotContent spotImageText{
         margin:0px 15px 15px 15px;
         width:100%;
@@ -338,14 +344,13 @@ footer{
 }
 
 /* attraction.html */
-.image-date .wrapImageDate{
+.imageDate{
     display:flex;
     justify-content:space-between;
-    border-bottom:1px solid #e8e8e8;
     padding:40px 15px;
     color:#666666;
 }
-.image-date .wrapImageDate .spotImage{
+.imageDate .spotImage{
     display:block;
     position:relative;
     width:540px;
@@ -354,7 +359,7 @@ footer{
     border-radius:5px;
     margin-right:30px;
 }
-.image-date .wrapImageDate .spotImage img{
+.imageDate .spotImage img{
     display:block;
     width:100%;
     height:100%;
@@ -381,32 +386,33 @@ footer{
 .arrowLeft:hover, .arrowRight:hover{
     opacity:0.8;
 }
-.image-date .wrapImageDate .textDate spotTextName{
+.imageDate .textDate spotTextName{
     display:block;
     font-size:24px;
     line-height:24px;
     font-weight:bold;
     margin-bottom:15px;
 }
-.image-date .wrapImageDate .textDate spotTextMrtCat{
+.imageDate .textDate spotTextMrtCat{
     display:block;
     font-size:16px;
     line-height:16px;
     margin-bottom:20px;
 }
-.image-date .wrapImageDate .textDate .date{
+.imageDate .textDate .date{
     width:100%;
     background-color:#E8E8E8;
     border-radius:5px;
     font-size:16px;
     padding:20px;
 }
-.image-date .wrapImageDate .textDate .date h2{
+.imageDate .textDate .date h2{
     font-weight:bold;
     margin-bottom:20px;
 }
-.image-date .wrapImageDate .textDate .date p{
+.imageDate .textDate .date p{
     margin-bottom:20px;
+    line-height:1.5;
 }
 .textDate{
     width:600px;
@@ -419,37 +425,43 @@ footer{
 }
 .date .pure-form input[type="date"]{
     height:35px;
-    width:50%;
 }
 .textDate .date .labelTime{
     display:inline-block;
 }
-@media screen and (max-width:600px){
-    .image-date .wrapImageDate{
+.borderLine{
+    border:1px solid #e8e8e8;
+}
+@media screen and (max-width:768px){
+    .imageDate{
         flex-wrap:wrap;
         padding-left:0px;
         padding-right:0px;
     }
-    .image-date .wrapImageDate .spotImage{
+    .imageDate .spotImage{
         width:100%;
         height:350px;
         margin-right:0px;
         margin-bottom:25px;
     }
-    .image-date .wrapImageDate .textDate{
+    .imageDate .textDate{
         padding:0px 10px;
     }
+    .borderLine{
+        margin-left:10px;
+        margin-right:10px;
+    }
 }
-.text .wrapSpotData{
+.textDesAdd{
     font-size:16px;
     line-height:1.5;
     padding:50px 10px 120px 10px;
     color:#666666;
 }
-.text .wrapSpotData .description, .text .wrapSpotData .address, .text .wrapSpotData .transport{
+.textDesAdd .description, .textDesAdd .address, .textDesAdd .transport{
     margin-bottom:25px;
 }
-.text .wrapSpotData .address h4, .text .wrapSpotData .transport h4{
+.textDesAdd .address h4, .textDesAdd .transport h4{
     font-weight:bold;
     line-height:1.8;
 }
@@ -463,12 +475,13 @@ footer{
 .textDate .date .pure-button:hover{
     background-color:#387180;
 }
-@media screen and (max-width:600px){
-    .text .wrapSpotData{
+@media screen and (max-width:768px){
+    .textDesAdd{
         padding-left:20px;
         padding-right:20px;
     }
 }
+
 /* 註冊、登入彈跳視窗 */
 .signIn, .register{
     display:none;
@@ -514,6 +527,7 @@ footer{
     padding:15px;
     font-size:16px;
     margin-bottom:10px;
+    width:100%;
 }
 .signIn .signInButton, .register .registerButton{
     width:100%;
@@ -547,8 +561,230 @@ footer{
     font-size:14px;
     margin-top:15px;
 }
-@media screen and (max-width:600px){
+@media screen and (max-width:768px){
     .signIn, .register{
         z-index:12;
     }
+    .headerUsername{
+        display:none;
+    }
+}
+
+/* booking.html */
+.wrapBooking{
+    color:#666666;
+}
+.scheduled{
+    padding:45px 0px 15px 100px;
+}
+.scheduled h4{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:35px;
+}
+.contactInformation h4, .paymentInformation h4{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:24px;
+}
+.spotScheduled{
+    display:flex;
+    justify-content:space-between;
+    margin:25px 0px;
+}
+.spotScheduledData{
+    display:flex;
+}
+.spotScheduledData figure{
+    display:block;
+    width:266px;
+    height:200px;
+    overflow:hidden;
+    margin-right:25px;
+    border-radius:5px;
+}
+.spotScheduledData figure img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.textDiv h5 a{
+    font-size:16px;
+    font-weight:bold;
+    color:#448899;
+    text-decoration:none;
+}
+.textDiv h5{
+    margin:10px 0px 30px 0px;
+}
+.textDiv h5 a:hover{
+    color:#387180;
+}
+.spotScheduledDate, .spotScheduledTime, .spotScheduledPrice, .spotScheduledAddress{
+    margin-bottom:20px;
+    font-weight:bold;
+}
+.spotScheduledDate span, .spotScheduledTime span, .spotScheduledPrice span, .spotScheduledAddress span{
+    font-weight:normal;
+}
+.spotScheduled .iconDelete{
+    color:#666666;
+    font-size:20px;
+    padding:0px 10px;
+    margin:10px 100px 0px 0px;
+}
+.spotScheduled .iconDelete:hover{
+    color:#448899;
+    cursor:pointer;
+}
+.contactInformation, .paymentInformation{
+    padding:45px 0px 45px 110px;
+}
+.contactInformation p{
+    font-size:16px;
+    font-weight:bold;
+}
+#contactName, #contactEmail, #paymentCard{
+    margin-bottom:15px;
+    padding:10px;
+}
+.contactInformation p{
+    margin-top:20px;
+    font-size:16px;
+    font-weight:bold;
+}
+.wrapBooking .bookingPrice{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    padding-right:110px;
+}
+.wrapBooking .bookingPrice h5{
+    font-size:16px;
+    font-weight:bold;
+    margin:35px 0px 25px 0px;
+}
+.wrapBooking .bookingPrice button{
+    font-size:20px;
+    color:#FFFFFF;
+    background-color:#448899;
+    padding:10px 20px;
+    margin-bottom:60px;
+    border-radius:5px;
+}
+.wrapBooking .bookingPrice button:hover{
+    background-color:#387180;
+}
+.noScheduled{
+    font-size:16px;
+    color:#666666;
+    margin-bottom:25px;
+}
+.tapPayInformation .tapPaySection{
+    display:flex;
+    align-items:center;
+}
+.tapPayTitle{
+    margin-right:5.5px;
+}
+#card-number, #card-expiration-date, #card-ccv{
+    display:inline-block;
+    margin-bottom:15px;
+}
+.tapPayInformation label{
+    display:block;
+}
+.tpfield{
+    height:40px;
+    width:300px;
+    border:1px solid gray;
+    margin:5px 0px;
+    padding:5px;
+}
+.tappay-field-focus{
+    border-color:#66afe9;
+    outline:0;
+    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+@media screen and (max-width:768px){
+    .wrapBooking{
+        padding-left:10px;
+        padding-right:10px;
+        line-height:1.5;
+    }
+    .scheduled, .contactInformation, .paymentInformation{
+        padding-left:0px;
+    }
+    .spotScheduled{
+        display:block;
+        margin-bottom:0px;
+        position:relative;
+        padding-bottom:20px;
+    }
+    .spotScheduledData{
+        display:block;
+    }
+    .spotScheduledData figure{
+        width:100%;
+        margin-right:0px;
+        margin-bottom:15px;
+    }
+    .spotScheduled .iconDelete{
+        position:absolute;
+        right:0px;
+        bottom:0px;
+        padding:20px 10px 15px 20px;
+        margin:0px;
+    }
+    .wrapBooking .bookingPrice{
+        padding-right:0px;
+    }
+}
+
+/* thankyou.html */
+.thankText{
+    color:rgb(65, 54, 54);
+    /* background-color:#b5d7e2; */
+    /* background-color:rgba(181, 215, 226, 0.5); */
+    /* background:linear-gradient(#AADDEE, #66AABB); */
+    background-color:rgba(170, 221, 238, 0.5);
+    display:flex;
+    justify-content:center;
+    padding-top:120px;
+    padding-bottom:120px;
+}
+.thankText .framwork{
+    padding:30px 75px;
+    text-align:center;
+    display:inline-block;
+    background-color:white;
+    border-radius:5px;
+    box-shadow:0px 5px 20px rgb(210, 210, 210);
+}
+.thankText .framwork h3{
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#387180;
+    padding:0px 0px 30px 0px;
+}
+.thankText .framwork p{
+    margin:10px 0px 40px 0px;
+}
+.orderNumber{
+    color:rgb(211, 86, 103);
+}
+.thankText .framwork a{
+    display:block;
+    width:100%;
+    text-decoration:none;
+    color:#FFFFFF;
+    background-color:#448899;
+    padding:10px;
+    border-radius:5px;
+}
+.thankText .framwork a:hover{
+    background-color:#387180;
 }
