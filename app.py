@@ -224,7 +224,7 @@ def apiOrders():
 		if orderInformation["prime"] != "" and orderInformation["order"]["trip"] != [] and orderInformation["order"]["contact"]["name"] != "" and orderInformation["order"]["contact"]["email"] != "" and orderInformation["order"]["contact"]["phone"] != "":
 			orderData={
 				"prime":orderInformation["prime"],
-				"partner_key": "partner_2t1bM4mdlh58dF9DO8EIrD6gjcuJGidqvEr2BvW5NgNxU41o2DLMptE4",
+				"partner_key":"partner_2t1bM4mdlh58dF9DO8EIrD6gjcuJGidqvEr2BvW5NgNxU41o2DLMptE4",
 				"merchant_id":"jamie871225_CTBC",
 				"details":"TapPay",
 				"amount":orderInformation["order"]["price"],
@@ -242,7 +242,6 @@ def apiOrders():
 			}, data=json.dumps(orderData).encode("utf-8"))
 			with req.urlopen(tappayRequest) as response:
 				result=response.read().decode("utf-8")
-			# print(result)
 			if result[10] == "0":
 				replyMessage["data"]["payment"]["status"]=0
 				replyMessage["data"]["payment"]["message"]="付款成功"
